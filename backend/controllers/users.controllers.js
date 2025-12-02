@@ -1,0 +1,77 @@
+const usersModels = require("../models/users.models"); // Importar el modelo de la BBDD
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+// GET LogIn
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email y contraseña requeridos" });
+    }
+    const user = await usersModels.getUserModel(email);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+    const token = jwt.sign(
+      { id: user.id_user, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    return res.status(200).json({
+      message: "Login correcto",
+      token,
+      user: {
+        id: user.id_user,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error en login:", error);
+    res.status(500).json({
+      message: "Error en login",
+      error: error.message,
+    });
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      name,
+      email,
+      password: encryptedPassword,
+      role,
+    };
+    const response = await usersModels.createUser(newUser);
+    res.status(201).json({
+      message: `Usuario creado: ${email}`,
+    });
+  } catch (error) {
+    console.error("Error al crear el usuario:", error);
+    res.status(500).json({
+      message: "Error al crear el usuario",
+      error: error.message,
+    });
+  }
+};
+
+function logout(req, res) {
+    res.clearCookie('token');
+    res.redirect('/login');
+}
+
+module.exports = {
+  createUser,
+  loginUser
+
+};
