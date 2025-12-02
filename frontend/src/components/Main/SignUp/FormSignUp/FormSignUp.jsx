@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FormSignUp = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ const FormSignUp = () => {
     password: "",
     role: "alumno",
   });
+
+  const navigate = useNavigate(); // <-- Hook para navegar
 
   const handleChange = (e) => {
     setFormData({
@@ -21,9 +24,7 @@ const FormSignUp = () => {
     try {
       const res = await fetch("http://localhost:3000/user/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -31,12 +32,12 @@ const FormSignUp = () => {
 
       if (res.ok) {
         alert("Usuario creado correctamente: " + data.message);
+        navigate("/login"); // <-- Redirige al login
       } else {
-    
         alert("Error al crear usuario: " + data.error);
       }
     } catch (error) {
-      console.error("Error en la petición:", error);
+      console.error("Error en el servidor:", error);
       alert("Error en el servidor");
     }
   };

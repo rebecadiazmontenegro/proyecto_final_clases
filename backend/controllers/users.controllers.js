@@ -2,7 +2,7 @@ const usersModels = require("../models/users.models"); // Importar el modelo de 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// GET LogIn
+// GET http://localhost:3000/login
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,6 +42,7 @@ const loginUser = async (req, res) => {
   }
 };
 
+// POST http://localhost:3000/user/signup
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -52,7 +53,7 @@ const createUser = async (req, res) => {
       password: encryptedPassword,
       role,
     };
-    const response = await usersModels.createUser(newUser);
+    const response = await usersModels.createUserModel(newUser);
     res.status(201).json({
       message: `Usuario creado: ${email}`,
     });
@@ -65,12 +66,14 @@ const createUser = async (req, res) => {
   }
 };
 
+
 function logout(req, res) {
-    res.clearCookie('token');
-    res.redirect('/login');
+  res.clearCookie("token");
+  res.redirect("/login");
 }
 
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  logout
 };

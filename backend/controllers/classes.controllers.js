@@ -1,8 +1,7 @@
 const pool = require("../config/db_pgsql");
 const classesModel = require("../models/classes.models"); 
 
-// // GET http://localhost:3000/classes/profile
-
+// GET http://localhost:3000/classes/profile
 const getLatestClasses = async (req, res) => {
   const id_user = req.user.id; 
 
@@ -15,25 +14,40 @@ const getLatestClasses = async (req, res) => {
   }
 };
 
-// Controller para obtener detalle de una clase
-const getClassDetail = async (req, res) => {
-  const { id } = req.params; // id de la clase desde la URL
+// GET http://localhost:3000/classes/profile/all
+const getAllClasses = async (req, res) => {
+  const id_user = req.user.id; 
 
   try {
-    // Llamamos al modelo
-    const classDetail = await classesModel.getClassDetailModel(id);
-
-    if (!classDetail || classDetail.length === 0) {
-      return res.status(404).json({ message: "Clase no encontrada" });
-    }
-
-    res.status(200).json(classDetail[0]); // Devuelve un solo objeto
-  } catch (error) {
-    console.error("Error al obtener el detalle de la clase:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
+    const classes = await classesModel.getAllClassesModel(id_user);
+    res.json(classes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching all classes' });
   }
 };
 
+
+const getClassDetail = async (req, res) => {
+  try {
+    const id_class = req.params.id;
+
+    const data = await classesModel.getClassDetailModel(id_class);
+
+    if (data.length === 0) {
+      return res.status(404).json({ message: "Clase no encontrada" });
+    }
+
+    res.json(data[0]); // solo un resultado
+  } catch (err) {
+    console.error("Error en getClassDetail:", err);
+    res.status(500).json({ message: "Error al obtener el detalle de la clase" });
+  }
+};
+
+
 module.exports = {
   getLatestClasses,
+  getAllClasses,
+  getClassDetail
 };

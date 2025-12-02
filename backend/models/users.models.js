@@ -1,7 +1,7 @@
 const queries = require("../queries/users.queries");
 const pool = require("../config/db_pgsql");
 
-// GET http://localhost:3000/login/1
+// GET http://localhost:3000/login
 const getUserModel = async (email) => {
   let client, result;
 
@@ -19,8 +19,8 @@ const getUserModel = async (email) => {
   return result;
 };
 
-// POST http://localhost:3000/user
-const createUser = async (user) => {
+// POST http://localhost:3000/user/signup
+const createUserModel = async (user) => {
   const { name, email, password, role } = user;
   let client, result;
 
@@ -45,5 +45,5 @@ const createUser = async (user) => {
 
 module.exports = {
   getUserModel,
-  createUser,
+  createUserModel,
 };

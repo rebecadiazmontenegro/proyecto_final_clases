@@ -1,15 +1,17 @@
 const express = require("express");
-const cookieParser = require("cookie-parser"); 
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: "http://localhost:5173", // tu frontend
-  credentials: true,               // permite enviar cookies
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // tu frontend
+    credentials: true, // permite enviar cookies
+  })
+);
 
 // Middlewares
 app.use(express.json());
@@ -24,4 +26,3 @@ app.use("/classes", classesRoutes);
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
 });
-

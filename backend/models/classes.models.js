@@ -2,7 +2,6 @@ const queries = require("../queries/classes.queries");
 const pool = require("../config/db_pgsql");
 
 // GET http://localhost:3000/classes/profile
-
 const getLatestClassesModel = async (id_user) => {
   let client, result;
 
@@ -20,14 +19,13 @@ const getLatestClassesModel = async (id_user) => {
   return result;
 };
 
-
-// GET http://localhost:3000/api/authors
-const getClassDetailModel = async () => {
+// GET http://localhost:3000/classes/profile/all
+const getAllClassesModel = async (id_user) => {
   let client, result;
 
   try {
     client = await pool.connect(); 
-    const data = await client.query(queries.getClassDetail);
+    const data = await client.query(queries.allClasses, [id_user]);
     result = data.rows;
   } catch (err) {
     console.log(err);
@@ -39,8 +37,27 @@ const getClassDetailModel = async () => {
   return result;
 };
 
+
+const getClassDetailModel = async (id_class) => {
+  let client;
+
+  try {
+    client = await pool.connect();
+    const result = await client.query(queries.classesDetail, [id_class]);
+    return result.rows;
+  } catch (err) {
+    console.error("Error :", err);
+    throw err;
+  } finally {
+    if (client) client.release();
+  }
+};
+
+
 const classes = {
-  getLatestClassesModel
+  getLatestClassesModel,
+  getAllClassesModel,
+  getClassDetailModel
 }
 
 module.exports = classes;
