@@ -73,5 +73,4 @@ function logout(req, res) {
 module.exports = {
   createUser,
   loginUser
-
 };

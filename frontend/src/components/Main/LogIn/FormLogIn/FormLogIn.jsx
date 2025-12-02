@@ -9,19 +9,27 @@ const FormLogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:3000/user/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:3000/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("token", data.token);
-      navigate("/dashboardteacher");
-    } else {
-      alert(data.message);
+      if (res.ok) {
+        //GUARDAR TODO PARA LUEGO PODER VER PERFIL
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user)); 
+
+        navigate("/dashboardteacher"); // redirigimos
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error en login:", error);
+      alert("Error al iniciar sesión");
     }
   };
 

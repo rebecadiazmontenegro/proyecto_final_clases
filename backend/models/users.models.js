@@ -19,7 +19,6 @@ const getUserModel = async (email) => {
   return result;
 };
 
-
 // POST http://localhost:3000/user
 const createUser = async (user) => {
   const { name, email, password, role } = user;
@@ -46,5 +45,5 @@ const createUser = async (user) => {
 
 module.exports = {
   getUserModel,
-  createUser
+  createUser,
 };
