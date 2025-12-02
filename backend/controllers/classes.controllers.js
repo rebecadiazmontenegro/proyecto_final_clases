@@ -1,6 +1,20 @@
 const pool = require("../config/db_pgsql");
 const classesModel = require("../models/classes.models"); 
 
+// // GET http://localhost:3000/classes/profile
+
+const getLatestClasses = async (req, res) => {
+  const id_user = req.user.id; 
+
+  try {
+    const classes = await classesModel.getLatestClassesModel(id_user);
+    res.json(classes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching latest classes' });
+  }
+};
+
 // Controller para obtener detalle de una clase
 const getClassDetail = async (req, res) => {
   const { id } = req.params; // id de la clase desde la URL
@@ -21,5 +35,5 @@ const getClassDetail = async (req, res) => {
 };
 
 module.exports = {
-  getClassDetail,
+  getLatestClasses,
 };
