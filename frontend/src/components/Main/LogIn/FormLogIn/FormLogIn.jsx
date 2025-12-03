@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useNavigate } from "react-router-dom";
+import { logIn } from "../../../../services/users.service";
 
 const FormLogIn = () => {
   const [email, setEmail] = useState("");
@@ -13,27 +14,10 @@ const FormLogIn = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        //GUARDAR TODO PARA LUEGO PODER VER PERFIL
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        navigate("/dashboardteacher");
-      } else {
-        alert(data.message);
-      }
+      await logIn(email, password);
+      navigate("/dashboardteacher");
     } catch (error) {
-      console.error("Error en login:", error);
-      alert("Error al iniciar sesión");
+      alert(error.message || "Error al iniciar sesión");
     } finally {
       setLoading(false);
     }

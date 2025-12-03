@@ -100,10 +100,28 @@ const editClass = async (req, res) => {
 };
 
 
+const createClass = async (req, res) => {
+  try {
+    const id_user = req.user.id; 
+    const { subjectName, materials, level, schedule, format } = req.body;
+
+    const newClass = await classesModel.createClass(id_user, subjectName, materials, level, schedule, format);
+
+    res.status(201).json({
+      message: "Clase creada con éxito",
+      class: newClass,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getLatestClasses,
   getAllClasses,
   getClassDetail,
   deleteClass,
-  editClass
+  editClass,
+  createClass
 };

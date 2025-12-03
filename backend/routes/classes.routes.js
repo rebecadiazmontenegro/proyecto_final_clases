@@ -16,5 +16,7 @@ router.delete("/detail/:id", authMiddleware, classesController.deleteClass);
 
 router.put("/detail/:id", authMiddleware, classesController.editClass);
 
+router.post("/create", authMiddleware, classesController.createClass);
+
 module.exports = router;
 

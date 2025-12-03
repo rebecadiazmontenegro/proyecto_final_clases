@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signUp } from "../../../../services/users.service";
 
 const FormSignUp = () => {
   const [formData, setFormData] = useState({
@@ -18,29 +19,17 @@ const FormSignUp = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch("http://localhost:3000/user/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("Usuario creado correctamente: " + data.message);
-        navigate("/login"); 
-      } else {
-        alert("Error al crear usuario: " + data.error);
-      }
-    } catch (error) {
-      console.error("Error en el servidor:", error);
-      alert("Error en el servidor");
-    }
-  };
+  try {
+    const data = await signUp(formData);
+    alert("Usuario creado correctamente: " + data.message);
+    navigate("/login");
+  } catch (error) {
+    alert(error.message || "Error en el servidor");
+  }
+};
 
   return (
     <form className="formRegister" onSubmit={handleSubmit}>

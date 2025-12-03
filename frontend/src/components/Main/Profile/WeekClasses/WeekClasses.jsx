@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from "react";
 import WeekClassesCard from './WeekClassesCard/WeekClassesCard';
+import { getLatestClasses } from '../../../../services/classes.service';
 
 const WeekClasses = () => {
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const res = await fetch("http://localhost:3000/classes/profile", {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-
-        if (!res.ok) throw new Error("No se pudieron cargar las clases");
-
-        const data = await res.json();
-        setClasses(data);
-      } catch (error) {
-        console.error(error);
-      }
+      const data = await getLatestClasses();
+      setClasses(data);
     };
 
     fetchClasses();

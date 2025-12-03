@@ -37,6 +37,10 @@ const queries = {
     WHERE c.id_class = $1
   `,
 
+  getSubjectId: `
+    SELECT id_subject FROM subjects WHERE name = $1
+  `,
+
   createClass: `
     INSERT INTO classes (id_user, id_subject, materials, level, schedule, format)
     VALUES ($1, $2, $3, $4, $5, $6)
