@@ -2,10 +2,10 @@ import React from "react";
 
 const WeekClassesCard = ({ subject, schedule }) => {
   return (
-    <div className="week-class-card">
+    <article className="latesClassCard">
       <h3>{subject}</h3>
       <p>{schedule}</p>
-    </div>
+    </article>
   );
 };
 

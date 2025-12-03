@@ -12,12 +12,11 @@ const InforUser = () => {
   }
 
   return (
-    <div>
-      <h2>Perfil del usuario</h2>
+    <section className="userInfo">
       <p><strong>Nombre:</strong> {user.name}</p>
       <p><strong>Email:</strong> {user.email}</p>
       <p><strong>Rol:</strong> {user.role}</p>
-    </div>
+    </section>
   );
 };
 

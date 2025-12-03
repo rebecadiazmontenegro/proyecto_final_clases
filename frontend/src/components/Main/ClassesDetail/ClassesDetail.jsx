@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
+
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 import BeatLoader from "react-spinners/BeatLoader";
+
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   getClassDetail,
   deleteClass,
@@ -22,6 +27,11 @@ const ClassesDetail = () => {
     materials: "",
   });
 
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+  });
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -37,6 +47,7 @@ const ClassesDetail = () => {
         });
       } catch (err) {
         console.error("Error al obtener detalle", err);
+        notyf.error("Error al obtener detalle de la clase");
       } finally {
         setLoading(false);
       }
@@ -50,11 +61,11 @@ const ClassesDetail = () => {
 
     try {
       await deleteClass(id);
-      alert("Clase eliminada correctamente");
+      notyf.success("Clase eliminada correctamente");
       navigate("/classes");
     } catch (err) {
       console.error("Error al eliminar", err);
-      alert(err.message);
+      notyf.error(err.message || "Error al eliminar clase");
     }
   };
 
@@ -62,12 +73,12 @@ const ClassesDetail = () => {
     e.preventDefault();
     try {
       await editClass(id, formData);
-      alert("Clase actualizada correctamente");
+      notyf.success("Clase actualizada correctamente");
       setClassDetail({ ...classDetail, ...formData });
       setIsEditing(false);
     } catch (err) {
       console.error("Error al editar", err);
-      alert(err.message);
+      notyf.error(err.message || "Error al editar clase");
     }
   };
 
@@ -84,9 +95,13 @@ const ClassesDetail = () => {
   if (!classDetail) return <p>No se encontró la clase.</p>;
 
   return (
-    <section>
+    <section className="classDatail">
+      <button className="backButton" onClick={() => navigate(-1)}>
+        Volver
+      </button>
+      <h1>Toda la información sobre tu clase</h1>
       {!isEditing ? (
-        <>
+        <article className="classDetailInfo">
           <h2>{classDetail.subject_name}</h2>
           <p>
             <strong>Horario:</strong> {classDetail.schedule}
@@ -109,12 +124,11 @@ const ClassesDetail = () => {
             <button onClick={() => setIsEditing(true)}>Editar</button>
             <button onClick={handleDelete}>Eliminar</button>
           </div>
-        </>
+        </article>
       ) : (
         // Formulario para editar empieza aqui
-        <form onSubmit={handleEditSubmit}>
+        <form className="editForm" onSubmit={handleEditSubmit}>
           <h2>Editar clase</h2>
-
           <label>Asignatura:</label>
           <select
             name="subject_name"
@@ -163,7 +177,6 @@ const ClassesDetail = () => {
             <option value="Cultura Audiovisual">Cultura Audiovisual</option>
             <option value="Dibujo Artístico">Dibujo Artístico</option>
           </select>
-
           <label>Horario:</label>
           <input
             type="text"
@@ -173,7 +186,6 @@ const ClassesDetail = () => {
               setFormData({ ...formData, schedule: e.target.value })
             }
           />
-
           <label>Nivel:</label>
           <select
             name="level"
@@ -188,7 +200,6 @@ const ClassesDetail = () => {
             <option value="Medio">Medio</option>
             <option value="Avanzado">Avanzado</option>
           </select>
-
           <label>Formato:</label>
           <select
             name="format"
@@ -202,7 +213,6 @@ const ClassesDetail = () => {
             <option value="Online">Online</option>
             <option value="Presencial">Presencial</option>
           </select>
-
           <label>Materiales:</label>
           <input
             type="text"
@@ -211,11 +221,12 @@ const ClassesDetail = () => {
               setFormData({ ...formData, materials: e.target.value })
             }
           />
-
-          <button type="submit">Guardar</button>
-          <button type="button" onClick={() => setIsEditing(false)}>
-            Cancelar
-          </button>
+          <div>
+            <button type="saveEdit">Guardar</button>
+            <button type="cancelEdit" onClick={() => setIsEditing(false)}>
+              Cancelar
+            </button>
+          </div>
         </form>
       )}
     </section>

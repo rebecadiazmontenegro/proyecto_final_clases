@@ -34,31 +34,26 @@ const FormLogIn = () => {
   }
 
   return (
-    <form className="formLogin" onSubmit={handleSubmit}>
-      <h2>Iniciar sesión</h2>
-
-      <div>
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label>Contraseña</label>
-        <input
-          type="password"
-          name="password"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <button type="submit">Entrar</button>
-    </form>
+    <section>
+      <form className="formLogin" onSubmit={handleSubmit}>
+        <h2>Iniciar sesión</h2>
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <label>Contraseña</label>
+          <input
+            type="password"
+            name="password"
+            required
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
   );
 };
 

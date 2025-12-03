@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
+
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+import { useNavigate } from "react-router-dom";
 import { Calendar, Views } from "react-big-calendar";
+
 import { localizer } from "../../../calendar/localizer";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+
+import { getAllClasses, createClass } from "../../../services/classes.service";
 
 const API_URL = "http://localhost:3000/classes";
 
@@ -48,6 +55,7 @@ function formatDate(date) {
 }
 
 export default function MyCalendar() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
@@ -62,24 +70,25 @@ export default function MyCalendar() {
     format: "",
   });
 
+   const notyf = new Notyf({ duration: 3000, position: { x: 'center', y: 'top' } });
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
+
   useEffect(() => {
     async function loadEvents() {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const res = await fetch(`${API_URL}/all`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!res.ok) throw new Error("No se pudieron cargar las clases");
-
-        const data = await res.json();
+        const data = await getAllClasses();
         const formatted = data.map((ev) => ({
           id: ev.id_class,
           title: ev.subject,
           start: new Date(ev.schedule),
-          end: new Date(ev.schedule), // si no tienes hora final, puedes ajustar
+          end: new Date(ev.schedule),
           materials: ev.materials,
           level: ev.level,
           schedule: ev.schedule,
@@ -101,7 +110,7 @@ export default function MyCalendar() {
       setShowForm(true);
     }
     if (!(currentView === Views.WEEK || currentView === Views.DAY)) {
-      alert("Solo puedes añadir clases en la vista Semana o Día");
+      notyf.error("Solo puedes añadir clases en la vista Semana o Día");
       return;
     }
   }
@@ -124,21 +133,8 @@ export default function MyCalendar() {
         schedule: formatDate(selectedSlot.start),
         format: formData.format,
       };
-
-      const res = await fetch(`${API_URL}/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(newClass),
-      });
-
-      if (!res.ok) throw new Error("No se pudo crear la clase");
-
-      const saved = await res.json();
-
-      // Añadir al estado para que aparezca en el calendario
+      const saved = await createClass(newClass);
+      // Añadir al estado para que aparezcan en el calendario
       setEvents((prev) => [
         ...prev,
         {
@@ -153,7 +149,8 @@ export default function MyCalendar() {
         },
       ]);
 
-      // Limpiar formulario
+       notyf.success("Clase creada correctamente");
+
       setShowForm(false);
       setFormData({
         subjectName: "",
@@ -168,31 +165,34 @@ export default function MyCalendar() {
   }
 
   return (
-    <div style={{ padding: 16 }}>
-      <div style={{ height: "700px" }}>
+    <section style={{ padding: 16 }}>
+      <article style={{ height: "700px" }}>
         <Calendar
           localizer={localizer}
           events={events}
           selectable
           onSelectSlot={handleSelectSlot}
+          onSelectEvent={(event) => {
+            navigate(`/class/detail/${event.id}`);
+          }}
           startAccessor="start"
           endAccessor="end"
           views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
           culture="es"
           date={currentDate}
           onNavigate={(date) => setCurrentDate(date)}
-          view={currentView} // <- vista controlada
-          onView={(view) => setCurrentView(view)} // <- actualizar vista al cambiar
+          view={currentView}
+          onView={(view) => setCurrentView(view)}
           step={60}
           timeslots={1}
           showMultiDayTimes
         />
-      </div>
+      </article>
 
       {showForm && (
-        <div style={{ marginTop: 20, padding: 20, border: "1px solid #ccc" }}>
+        <article className="createClassCalendar">
           <h2>Crear Clase</h2>
-          <form onSubmit={handleSubmit}>
+          <form className="createFormCalendar" onSubmit={handleSubmit}>
             <label>
               Materia:
               <select
@@ -209,8 +209,6 @@ export default function MyCalendar() {
                 ))}
               </select>
             </label>
-            <br />
-
             <label>
               Materiales:
               <input
@@ -221,8 +219,6 @@ export default function MyCalendar() {
                 required
               />
             </label>
-            <br />
-
             <label>Nivel:</label>
             <select
               name="level"
@@ -235,8 +231,6 @@ export default function MyCalendar() {
               <option value="Medio">Medio</option>
               <option value="Avanzado">Avanzado</option>
             </select>
-            <br />
-
             <label>Formato:</label>
             <select
               name="format"
@@ -248,7 +242,6 @@ export default function MyCalendar() {
               <option value="Online">Online</option>
               <option value="Presencial">Presencial</option>
             </select>
-            <br />
             <label>
               Fecha y Hora:
               <input
@@ -261,14 +254,15 @@ export default function MyCalendar() {
                 readOnly
               />
             </label>
-            <br />
-            <button type="submit">Guardar</button>
-            <button type="button" onClick={() => setShowForm(false)}>
-              Cancelar
-            </button>
+            <div className="createClassCalendarButton">
+              <button type="submit">Guardar</button>
+              <button type="button" onClick={() => setShowForm(false)}>
+                Cancelar
+              </button>
+            </div>
           </form>
-        </div>
+        </article>
       )}
-    </div>
+    </section>
   );
 }

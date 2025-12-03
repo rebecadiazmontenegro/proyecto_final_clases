@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createClass } from "../../../services/classes.service";
 import { logout } from "../../../services/users.service";
@@ -45,53 +45,63 @@ const DashboardTeacher = () => {
     format: "",
   });
 
-const handleLogout = async () => {
-  try {
-    await logout();
-    navigate("/login");
-  } catch (error) {
-    alert(error.message || "No se pudo cerrar sesión");
-  }
-};
+    useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      alert(error.message || "Error al cerrar sesión");
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createClass(formData);
+      alert("Clase creada con éxito");
+      navigate("/profile");
+      setShowForm(false);
+      setFormData({
+        subjectName: "",
+        materials: "",
+        level: "",
+        schedule: "",
+        format: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    await createClass(formData);
-    alert("Clase creada con éxito");
-    navigate("/profile");
-    setShowForm(false);
-    setFormData({
-      subjectName: "",
-      materials: "",
-      level: "",
-      schedule: "",
-      format: "",
-    });
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
   return (
     <section>
-      <h1>DashboardTeacher</h1>
+      <h1>Tu tablón</h1>
       <Link to="/profile">
-        <button>Ver mi perfil</button>
+        <button className="showProfileButton">Ver mi perfil</button>
       </Link>
-      <button onClick={() => setShowForm(true)}>Crear clase</button>
-      <button onClick={handleLogout}>Cerrar sesión</button>
+      <button className="createClassButton" onClick={() => setShowForm(true)}>
+        Crear clase
+      </button>
+      <button className="logOutButton" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
 
       {showForm && (
-        <div>
-          <h2>Crear Clase</h2>
-          <form onSubmit={handleSubmit}>
+        <article className="createClassDashboard">
+          <h2>¡Crea una nueva clase!</h2>
+          <form createClass="createClassForm" onSubmit={handleSubmit}>
             <label>
               Materia:
               <select
@@ -108,7 +118,6 @@ const handleSubmit = async (e) => {
                 ))}
               </select>
             </label>
-            <br />
             <label>
               Materiales:
               <input
@@ -119,7 +128,6 @@ const handleSubmit = async (e) => {
                 required
               />
             </label>
-            <br />
             <label>Nivel:</label>
             <select
               name="level"
@@ -134,18 +142,16 @@ const handleSubmit = async (e) => {
               <option value="Medio">Medio</option>
               <option value="Avanzado">Avanzado</option>
             </select>
-            <br />
             <label>
-              Horario:
+              Fecha y Hora:
               <input
-                type="text"
+                type="datetime-local"
                 name="schedule"
                 value={formData.schedule}
                 onChange={handleChange}
                 required
               />
             </label>
-            <br />
             <label>Formato:</label>
             <select
               name="format"
@@ -159,13 +165,17 @@ const handleSubmit = async (e) => {
               <option value="Online">Online</option>
               <option value="Presencial">Presencial</option>
             </select>
-            <br />
-            <button type="submit">Guardar</button>
-            <button type="button" onClick={() => setShowForm(false)}>
-              Cancelar
-            </button>
+            <div className="createFormButtons">
+              <button type="saveCreateButton">Guardar</button>
+              <button
+                type="cancelCreateButtom"
+                onClick={() => setShowForm(false)}
+              >
+                Cancelar
+              </button>
+            </div>
           </form>
-        </div>
+        </article>
       )}
     </section>
   );

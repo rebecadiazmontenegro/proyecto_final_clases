@@ -15,7 +15,7 @@ const WeekClasses = () => {
   }, []);
 
   return (
-    <article>
+    <section className="latestClasses">
       {classes.length > 0 ? (
         classes.map((cls, index) => (
           <WeekClassesCard 
@@ -27,7 +27,7 @@ const WeekClasses = () => {
       ) : (
         <p>No hay clases disponibles</p>
       )}
-    </article>
+    </section>
   );
 };
 

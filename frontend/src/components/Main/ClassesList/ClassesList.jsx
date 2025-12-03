@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import ClassesCard from "./ClassesCard/ClassesCard";
 import { getAllClasses } from "../../../services/classes.service";
@@ -35,36 +36,48 @@ const subjects = [
 ];
 
 const ClassesList = () => {
+  const navigate = useNavigate();
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterSubject, setFilterSubject] = useState(""); //Estado para el filtro de materias
+  const [filterSubject, setFilterSubject] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
 
   useEffect(() => {
     const fetchClasses = async () => {
       const data = await getAllClasses();
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500)); //Espera falsa para poder poner el spinner
       setClasses(data);
       setLoading(false);
     };
-
     fetchClasses();
   }, []);
 
   if (loading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+      >
         <BeatLoader color="#4caf50" size={15} margin={2} loading={true} />
       </div>
     );
   }
-
-  // Filtrar las clases según el subject
+  //Para filtrar las clases por asignatura
   const filteredClasses = filterSubject
     ? classes.filter((cls) => cls.subject === filterSubject)
     : classes;
 
   return (
-    <section>
+    <section className="allClasses">
+      <button className="backButton" onClick={() => navigate(-1)}>
+        Volver
+      </button>
+      <h1>Todas tus clases</h1>
       <label>
         Filtrar por materia:
         <select

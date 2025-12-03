@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const ClassesCard = ({ id_class, subject, schedule, level }) => {
   return (
-    <div className="classes-card">
+    <div className="allClassesCard">
       <h3>{subject}</h3>
       <p>Horario: {schedule}</p>
       <p>Nivel: {level}</p>
