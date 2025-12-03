@@ -9,7 +9,7 @@ const FormSignUp = () => {
     role: "alumno",
   });
 
-  const navigate = useNavigate(); // <-- Hook para navegar
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setFormData({
@@ -32,7 +32,7 @@ const FormSignUp = () => {
 
       if (res.ok) {
         alert("Usuario creado correctamente: " + data.message);
-        navigate("/login"); // <-- Redirige al login
+        navigate("/login"); 
       } else {
         alert("Error al crear usuario: " + data.error);
       }

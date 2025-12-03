@@ -12,16 +12,16 @@ const queries = {
 
   allClasses: `
   SELECT
-  c.id_class,
-  s.name AS subject,
-  c.schedule,
-  c.level
-FROM classes c
-JOIN subjects s ON c.id_subject = s.id_subject
-WHERE c.id_user = $1
-ORDER BY c.schedule;
+    c.id_class,
+    s.name AS subject,
+    c.schedule,
+    c.level
+  FROM classes c
+  JOIN subjects s ON c.id_subject = s.id_subject
+  WHERE c.id_user = $1
+  ORDER BY c.schedule;
 `,
-  
+
   classesDetail: `
     SELECT 
       c.materials,

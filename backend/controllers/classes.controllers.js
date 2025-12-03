@@ -45,9 +45,65 @@ const getClassDetail = async (req, res) => {
   }
 };
 
+const deleteClass = async (req, res) => {
+  try {
+    const id_class = req.params.id;
+    const id_user = req.user.id; 
+
+    const deleted = await classesModel.deleteClassModel(id_class, id_user);
+
+    if (!deleted) {
+      return res
+        .status(404)
+        .json({ message: "Clase no encontrada o no pertenece al usuario" });
+    }
+
+    res.json({ message: "Clase eliminada correctamente", deleted });
+  } catch (error) {
+    console.error("Error al eliminar clase", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+
+const editClass = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const id_user = req.user.id;
+
+    const { subject_name, materials, level, schedule, format } = req.body;
+
+    const updated = await classesModel.editClassModel({
+      subject_name,
+      materials,
+      level,
+      schedule,
+      format,
+      id_class: id,
+      id_user,
+    });
+
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: "No se encontró la clase o no tienes permiso." });
+    }
+
+    res.json({
+      message: "Clase actualizada correctamente",
+      class: updated,
+    });
+  } catch (error) {
+    console.error("Error en editClassController:", error);
+    res.status(500).json({ message: "Error interno al editar la clase" });
+  }
+};
+
 
 module.exports = {
   getLatestClasses,
   getAllClasses,
-  getClassDetail
+  getClassDetail,
+  deleteClass,
+  editClass
 };

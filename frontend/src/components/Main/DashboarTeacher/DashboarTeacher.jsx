@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+
 const DashboardTeacher = () => {
+  
   const handleLogout = async () => {
     try {
       const res = await fetch("http://localhost:3000/user/logout", {

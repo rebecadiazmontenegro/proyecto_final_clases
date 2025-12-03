@@ -9,6 +9,12 @@ router.get('/profile', authMiddleware, classesController.getLatestClasses);
 // GET http://localhost:3000/classes/profile/all
 router.get('/all', authMiddleware, classesController.getAllClasses);
 
+// GET http://localhost:3000/classes/detail/3
 router.get("/detail/:id", authMiddleware, classesController.getClassDetail);
 
+router.delete("/detail/:id", authMiddleware, classesController.deleteClass);
+
+router.put("/detail/:id", authMiddleware, classesController.editClass);
+
 module.exports = router;
+
