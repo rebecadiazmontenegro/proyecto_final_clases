@@ -10,6 +10,7 @@ import ClassesList from "./ClassesList/ClassesList";
 import Calendar from "./Calendar/Calendar";
 import ClassDetail from "./ClassesDetail/ClassesDetail";
 
+
 const Main = () => {
   return (
     <main>
@@ -22,6 +23,7 @@ const Main = () => {
         <Route path="/classes" element={<ClassesList />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/class/detail/:id" element={<ClassDetail />} />
+        <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </main>
   );
