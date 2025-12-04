@@ -18,7 +18,7 @@ CREATE TABLE classes (
     id_class SERIAL PRIMARY KEY,
     id_user INT NOT NULL,
     id_subject INT NOT NULL,
-    materials TEXT NOT NULL,
+    materials TEXT [],
     level VARCHAR(50) NOT NULL,
     schedule VARCHAR(100) NOT NULL,
     format VARCHAR(50) NOT NULL,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
 import { Calendar, Views } from "react-big-calendar";
 
@@ -9,8 +9,6 @@ import { localizer } from "../../../calendar/localizer";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { getAllClasses, createClass } from "../../../services/classes.service";
-
-const API_URL = "http://localhost:3000/classes";
 
 const subjects = [
   "Historia del Arte",
@@ -64,14 +62,16 @@ export default function MyCalendar() {
 
   const [formData, setFormData] = useState({
     subjectName: "",
-    materials: "",
+    materials: [],
     level: "",
     schedule: "",
     format: "",
   });
 
-   const notyf = new Notyf({ duration: 3000, position: { x: 'center', y: 'top' } });
-
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -120,21 +120,38 @@ export default function MyCalendar() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
+  const addMaterialInput = () => {
+    setFormData({
+      ...formData,
+      materials: [...formData.materials, null],
+    });
+  };
+
+  const handleFileChange = (index, file) => {
+    const updated = [...formData.materials];
+    updated[index] = file;
+    setFormData({ ...formData, materials: updated });
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const newClass = {
-        subjectName: formData.subjectName,
-        materials: formData.materials,
-        level: formData.level,
-        schedule: formatDate(selectedSlot.start),
-        format: formData.format,
-      };
-      const saved = await createClass(newClass);
-      // Añadir al estado para que aparezcan en el calendario
+      const form = new FormData();
+      form.append("subjectName", formData.subjectName);
+
+      formData.materials.forEach((file) => {
+        form.append("materials", file);
+      });
+
+      form.append("level", formData.level);
+      form.append("schedule", formatDate(selectedSlot.start));
+      form.append("format", formData.format);
+
+      const saved = await createClass(form, token);
+
       setEvents((prev) => [
         ...prev,
         {
@@ -149,12 +166,13 @@ export default function MyCalendar() {
         },
       ]);
 
-       notyf.success("Clase creada correctamente");
+      notyf.success("Clase creada correctamente");
 
       setShowForm(false);
+
       setFormData({
         subjectName: "",
-        materials: "",
+        materials: [],
         level: "",
         schedule: "",
         format: "",
@@ -192,6 +210,7 @@ export default function MyCalendar() {
       {showForm && (
         <article className="createClassCalendar">
           <h2>Crear Clase</h2>
+
           <form className="createFormCalendar" onSubmit={handleSubmit}>
             <label>
               Materia:
@@ -209,16 +228,22 @@ export default function MyCalendar() {
                 ))}
               </select>
             </label>
-            <label>
-              Materiales:
+
+            <label>Materiales:</label>
+
+            {formData.materials.map((mat, index) => (
               <input
-                type="text"
-                name="materials"
-                value={formData.materials}
-                onChange={handleChange}
-                required
+                key={index}
+                type="file"
+                accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                onChange={(e) => handleFileChange(index, e.target.files[0])}
               />
-            </label>
+            ))}
+
+            <button type="button" onClick={addMaterialInput}>
+              Añadir material
+            </button>
+
             <label>Nivel:</label>
             <select
               name="level"
@@ -231,6 +256,7 @@ export default function MyCalendar() {
               <option value="Medio">Medio</option>
               <option value="Avanzado">Avanzado</option>
             </select>
+
             <label>Formato:</label>
             <select
               name="format"
@@ -242,6 +268,7 @@ export default function MyCalendar() {
               <option value="Online">Online</option>
               <option value="Presencial">Presencial</option>
             </select>
+
             <label>
               Fecha y Hora:
               <input
@@ -254,6 +281,7 @@ export default function MyCalendar() {
                 readOnly
               />
             </label>
+
             <div className="createClassCalendarButton">
               <button type="submit">Guardar</button>
               <button type="button" onClick={() => setShowForm(false)}>

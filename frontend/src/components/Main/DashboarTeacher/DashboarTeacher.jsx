@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { createClass } from "../../../services/classes.service";
 import { logout } from "../../../services/users.service";
 
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
 const subjects = [
   "Historia del Arte",
   "Matemáticas",
@@ -34,18 +37,34 @@ const subjects = [
   "Dibujo Artístico",
 ];
 
+function formatDate(date) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const seconds = String(d.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 const DashboardTeacher = () => {
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     subjectName: "",
-    materials: "",
+    materials: [],
     level: "",
     schedule: "",
     format: "",
   });
 
-  // Pasa las cookies que guarda el google auth al local storage 
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+  });
+
+  //Pasa las cookies que guarda el google auth al local storage
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
@@ -63,6 +82,13 @@ const DashboardTeacher = () => {
     }
   }, []);
 
+  const addMaterialInput = () => {
+    setFormData({
+      ...formData,
+      materials: [...formData.materials, null],
+    });
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -70,6 +96,11 @@ const DashboardTeacher = () => {
     } catch (error) {
       alert(error.message || "Error al cerrar sesión");
     }
+  };
+  const handleFileChange = (index, file) => {
+    const updated = [...formData.materials];
+    updated[index] = file;
+    setFormData({ ...formData, materials: updated });
   };
 
   const handleChange = (e) => {
@@ -79,9 +110,21 @@ const DashboardTeacher = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createClass(formData);
-      alert("Clase creada con éxito");
-      navigate("/profile");
+      const formattedSchedule = formatDate(new Date(formData.schedule));
+
+      const form = new FormData();
+      form.append("subjectName", formData.subjectName);
+      formData.materials.forEach((file) => {
+        form.append("materials", file);
+      });
+      form.append("level", formData.level);
+      form.append("schedule", formattedSchedule);
+      form.append("format", formData.format);
+      const token =
+        new URLSearchParams(window.location.search).get("token") ||
+        localStorage.getItem("token");
+      await createClass(form, token);
+      notyf.success("Clase creada correctamente");
       setShowForm(false);
       setFormData({
         subjectName: "",
@@ -90,6 +133,7 @@ const DashboardTeacher = () => {
         schedule: "",
         format: "",
       });
+      navigate("/calendar");
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -112,7 +156,7 @@ const DashboardTeacher = () => {
       {showForm && (
         <article className="createClassDashboard">
           <h2>¡Crea una nueva clase!</h2>
-          <form createClass="createClassForm" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <label>
               Materia:
               <select
@@ -129,16 +173,21 @@ const DashboardTeacher = () => {
                 ))}
               </select>
             </label>
-            <label>
-              Materiales:
+            <label>Materiales:</label>
+
+            {formData.materials.map((mat, index) => (
               <input
-                type="text"
-                name="materials"
-                value={formData.materials}
-                onChange={handleChange}
-                required
+                key={index}
+                type="file"
+                accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                onChange={(e) => handleFileChange(index, e.target.files[0])}
               />
-            </label>
+            ))}
+
+            <button type="button" onClick={addMaterialInput}>
+              Añadir material
+            </button>
+
             <label>Nivel:</label>
             <select
               name="level"
@@ -159,7 +208,12 @@ const DashboardTeacher = () => {
                 type="datetime-local"
                 name="schedule"
                 value={formData.schedule}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    schedule: e.target.value,
+                  })
+                }
                 required
               />
             </label>

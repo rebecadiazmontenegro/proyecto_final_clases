@@ -1,32 +1,31 @@
 const pool = require("../config/db_pgsql");
-const classesModel = require("../models/classes.models"); 
+const classesModel = require("../models/classes.models");
 
 // GET http://localhost:3000/classes/profile
 const getLatestClasses = async (req, res) => {
-  const id_user = req.user.id; 
+  const id_user = req.user.id;
 
   try {
     const classes = await classesModel.getLatestClassesModel(id_user);
     res.json(classes);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error fetching latest classes' });
+    res.status(500).json({ message: "Error fetching latest classes" });
   }
 };
 
 // GET http://localhost:3000/classes/profile/all
 const getAllClasses = async (req, res) => {
-  const id_user = req.user.id; 
+  const id_user = req.user.id;
 
   try {
     const classes = await classesModel.getAllClassesModel(id_user);
     res.json(classes);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error fetching all classes' });
+    res.status(500).json({ message: "Error fetching all classes" });
   }
 };
-
 
 const getClassDetail = async (req, res) => {
   try {
@@ -41,14 +40,16 @@ const getClassDetail = async (req, res) => {
     res.json(data[0]); // solo un resultado
   } catch (err) {
     console.error("Error en getClassDetail:", err);
-    res.status(500).json({ message: "Error al obtener el detalle de la clase" });
+    res
+      .status(500)
+      .json({ message: "Error al obtener el detalle de la clase" });
   }
 };
 
 const deleteClass = async (req, res) => {
   try {
     const id_class = req.params.id;
-    const id_user = req.user.id; 
+    const id_user = req.user.id;
 
     const deleted = await classesModel.deleteClassModel(id_class, id_user);
 
@@ -64,7 +65,6 @@ const deleteClass = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
-
 
 const editClass = async (req, res) => {
   try {
@@ -99,13 +99,23 @@ const editClass = async (req, res) => {
   }
 };
 
-
 const createClass = async (req, res) => {
   try {
-    const id_user = req.user.id; 
-    const { subjectName, materials, level, schedule, format } = req.body;
+    const id_user = req.user.id;
+    const { subjectName, level, schedule, format } = req.body;
 
-    const newClass = await classesModel.createClass(id_user, subjectName, materials, level, schedule, format);
+    const materials = req.files.map(
+      (file) => `${req.protocol}://${req.get("host")}/uploads/${file.filename}`
+    );
+
+    const newClass = await classesModel.createClass(
+      id_user,
+      subjectName,
+      materials,
+      level,
+      schedule,
+      format
+    );
 
     res.status(201).json({
       message: "Clase creada con éxito",
@@ -123,5 +133,5 @@ module.exports = {
   getClassDetail,
   deleteClass,
   editClass,
-  createClass
+  createClass,
 };
