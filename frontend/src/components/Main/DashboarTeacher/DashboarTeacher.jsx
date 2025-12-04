@@ -45,7 +45,18 @@ const DashboardTeacher = () => {
     format: "",
   });
 
-    useEffect(() => {
+  // Pasa las cookies que guarda el google auth al local storage 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/dashboardteacher", { replace: true });
+    }
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login", { replace: true });

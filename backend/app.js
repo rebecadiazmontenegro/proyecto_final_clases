@@ -1,5 +1,8 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("./config/googleAuth");
+
 require("dotenv").config();
 const cors = require("cors");
 
@@ -14,8 +17,18 @@ app.use(
 );
 
 // Middlewares
-app.use(express.json());
 app.use(cookieParser());
+app.use(
+  session({
+    secret: "SECRET_GOOGLE",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.json());
+
 // Routes
 const usersRoutes = require("./routes/users.routes");
 const classesRoutes = require("./routes/classes.routes");

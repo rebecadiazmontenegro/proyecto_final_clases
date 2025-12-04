@@ -9,6 +9,10 @@ const FormLogIn = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+   const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/user/auth/google";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -52,6 +56,13 @@ const FormLogIn = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         <button type="submit">Entrar</button>
+        <button
+          type="button"
+          className="googleButton"
+          onClick={handleGoogleLogin}
+        >
+          Iniciar sesión con Google
+        </button>
       </form>
     </section>
   );
