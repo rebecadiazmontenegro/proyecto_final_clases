@@ -86,23 +86,30 @@ const editClassModel = async (data) => {
   return rows[0];
 };
 
-
-const createClass = async (id_user, subjectName, materials, level, schedule, format) => {
+const createClass = async (
+  id_user,
+  subjectName,
+  materials,
+  level,
+  schedule,
+  format
+) => {
+  
   // Primero obtenemos el id_subject a partir del nombre
-  const subjectResult = await pool.query(queries.getSubjectId,
-    [subjectName]
-  );
+  const subjectResult = await pool.query(queries.getSubjectId, [subjectName]);
 
   if (subjectResult.rows.length === 0) {
     throw new Error("Materia no encontrada");
   }
-
   const id_subject = subjectResult.rows[0].id_subject;
-
-  // Insertamos la clase
-  const result = await pool.query(queries.createClass,
-    [id_user, id_subject, materials, level, schedule, format]
-  );
+  const result = await pool.query(queries.createClass, [
+    id_user,
+    id_subject,
+    materials,
+    level,
+    schedule,
+    format,
+  ]);
 
   return result.rows[0];
 };
@@ -113,7 +120,7 @@ const classes = {
   getClassDetailModel,
   deleteClassModel,
   editClassModel,
-  createClass
+  createClass,
 };
 
 module.exports = classes;

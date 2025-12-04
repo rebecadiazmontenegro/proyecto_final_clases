@@ -22,7 +22,6 @@ router.get("/logout", (req, res) => {
   return res.status(200).json({ message: "Logout exitoso" });
 });
 
-
 //Rutas Google Auth
 
 router.get(
@@ -49,22 +48,17 @@ router.get(
       expiresIn: "2h",
     });
 
-    res
-      .cookie("access-token", token, {
-        httpOnly: true,
-        sameSite: "strict",
-      })
-      res.redirect(
-  `http://localhost:5173/dashboardteacher?token=${token}`
-);
+    res.cookie("access-token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    });
+    res.redirect(`http://localhost:5173/dashboardteacher?token=${token}`);
   }
 );
-
 
 router.get("/auth/failure", (req, res) => {
   res.send("Error al autenticar con Google.");
 });
-
 
 router.get("/auth/logout", (req, res) => {
   req.logout(() => {

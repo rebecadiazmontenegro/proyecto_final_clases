@@ -97,16 +97,14 @@ export const editClass = async (id, formData) => {
 };
 
 // Llamada para crear una clase (Dashboard)
-export const createClass = async (classData) => {
-  const token = localStorage.getItem("token");
+export const createClass = async (formData, token) => {
 
   const response = await fetch(`http://localhost:3000/classes/create`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(classData),
+    body: formData, 
   });
 
   const data = await response.json();

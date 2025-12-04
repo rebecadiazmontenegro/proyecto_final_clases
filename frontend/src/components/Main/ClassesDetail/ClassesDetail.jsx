@@ -113,7 +113,7 @@ const ClassesDetail = () => {
             <strong>Formato:</strong> {classDetail.format}
           </p>
           <p>
-            <strong>Materiales:</strong> {classDetail.materials}
+            <a href={classDetail.materials} target="_blank">Ver materiales</a>
           </p>
 
           <h3>Profesor</h3>

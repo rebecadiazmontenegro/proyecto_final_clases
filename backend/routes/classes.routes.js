@@ -1,4 +1,5 @@
 const express = require("express");
+const { upload } = require("../middlewares/fileMiddleware")
 const router = express.Router();
 const classesController = require("../controllers/classes.controllers");
 const authMiddleware = require('../middlewares/authMiddleware');
@@ -16,7 +17,8 @@ router.delete("/detail/:id", authMiddleware, classesController.deleteClass);
 
 router.put("/detail/:id", authMiddleware, classesController.editClass);
 
-router.post("/create", authMiddleware, classesController.createClass);
+router.post("/create", authMiddleware, upload.single("materials"), classesController.createClass);
+
 
 module.exports = router;
 

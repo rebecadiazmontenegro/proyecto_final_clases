@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
 import { Calendar, Views } from "react-big-calendar";
 
@@ -70,8 +70,10 @@ export default function MyCalendar() {
     format: "",
   });
 
-   const notyf = new Notyf({ duration: 3000, position: { x: 'center', y: 'top' } });
-
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -126,14 +128,13 @@ export default function MyCalendar() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const newClass = {
-        subjectName: formData.subjectName,
-        materials: formData.materials,
-        level: formData.level,
-        schedule: formatDate(selectedSlot.start),
-        format: formData.format,
-      };
-      const saved = await createClass(newClass);
+      const form = new FormData();
+    form.append("subjectName", formData.subjectName);
+    form.append("materials", formData.materials); // <-- archivo
+    form.append("level", formData.level);
+    form.append("schedule", formatDate(selectedSlot.start));
+    form.append("format", formData.format);
+      const saved = await createClass(form, token);
       // Añadir al estado para que aparezcan en el calendario
       setEvents((prev) => [
         ...prev,
@@ -149,7 +150,7 @@ export default function MyCalendar() {
         },
       ]);
 
-       notyf.success("Clase creada correctamente");
+      notyf.success("Clase creada correctamente");
 
       setShowForm(false);
       setFormData({
@@ -212,11 +213,12 @@ export default function MyCalendar() {
             <label>
               Materiales:
               <input
-                type="text"
+                type="file"
                 name="materials"
-                value={formData.materials}
-                onChange={handleChange}
-                required
+                onChange={(e) =>
+                  setFormData({ ...formData, materials: e.target.files[0] })
+                }
+                accept=".pdf,video/*,audio/*"
               />
             </label>
             <label>Nivel:</label>

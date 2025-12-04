@@ -103,7 +103,9 @@ const editClass = async (req, res) => {
 const createClass = async (req, res) => {
   try {
     const id_user = req.user.id; 
-    const { subjectName, materials, level, schedule, format } = req.body;
+    const { subjectName, level, schedule, format } = req.body;
+
+    materials = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
     const newClass = await classesModel.createClass(id_user, subjectName, materials, level, schedule, format);
 
