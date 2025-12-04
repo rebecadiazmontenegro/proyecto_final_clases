@@ -112,9 +112,16 @@ const ClassesDetail = () => {
           <p>
             <strong>Formato:</strong> {classDetail.format}
           </p>
-          <p>
-            <a href={classDetail.materials} target="_blank">Ver materiales</a>
-          </p>
+          <h3>Materiales</h3>
+          <ul>
+            {classDetail.materials.map((url, idx) => (
+              <li key={idx}>
+                <a href={url} target="_blank">
+                  Material {idx + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
 
           <h3>Profesor</h3>
           <p>{classDetail.teacher_name}</p>

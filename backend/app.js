@@ -2,26 +2,27 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("./config/googleAuth");
-const path = require('path');
-const { upload, errorFileHandler } = require('./middlewares/fileMiddleware');
+const path = require("path");
+const { upload, errorFileHandler } = require("./middlewares/fileMiddleware");
 require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Descargar materiales en classes/details
-app.post('/upload', upload.single('file'), errorFileHandler, (req, res) => {
+app.post("/upload", upload.single("file"), errorFileHandler, (req, res) => {
   const { title, description, year } = req.body;
 
   const fileInfo = req.file
-    ? { 
-        originalName: req.file.originalname, 
-        path: `${req.protocol}://${req.get('host')}/uploads/${path.basename(req.file.path)}`
+    ? {
+        originalName: req.file.originalname,
+        path: `${req.protocol}://${req.get("host")}/uploads/${path.basename(
+          req.file.path
+        )}`,
       }
     : null;
 
@@ -34,15 +35,17 @@ app.post('/upload', upload.single('file'), errorFileHandler, (req, res) => {
   });
 });
 
-app.get('/records', (req, res) => {
-  const normalizedRecords = records.map(record => ({
+app.get("/records", (req, res) => {
+  const normalizedRecords = records.map((record) => ({
     ...record,
     file: record.file
-      ? { 
-          ...record.file, 
-          path: record.file.path.startsWith('http') 
-            ? record.file.path 
-            : `${req.protocol}://${req.get('host')}/uploads/${path.basename(record.file.path)}`
+      ? {
+          ...record.file,
+          path: record.file.path.startsWith("http")
+            ? record.file.path
+            : `${req.protocol}://${req.get("host")}/uploads/${path.basename(
+                record.file.path
+              )}`,
         }
       : null,
   }));
@@ -53,14 +56,12 @@ app.get('/records', (req, res) => {
   });
 });
 
-
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
-
 
 // Middlewares
 app.use(express.json());
@@ -82,7 +83,6 @@ const classesRoutes = require("./routes/classes.routes");
 
 app.use("/user", usersRoutes);
 app.use("/classes", classesRoutes);
-
 
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);

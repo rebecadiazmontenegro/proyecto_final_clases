@@ -53,7 +53,7 @@ const DashboardTeacher = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     subjectName: "",
-    materials: "",
+    materials: [],
     level: "",
     schedule: "",
     format: "",
@@ -82,6 +82,13 @@ const DashboardTeacher = () => {
     }
   }, []);
 
+  const addMaterialInput = () => {
+    setFormData({
+      ...formData,
+      materials: [...formData.materials, null],
+    });
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -90,10 +97,11 @@ const DashboardTeacher = () => {
       alert(error.message || "Error al cerrar sesión");
     }
   };
-const handleFileChange = (e) => {
-  setFormData({ ...formData, materials: e.target.files[0] });
-};
-
+  const handleFileChange = (index, file) => {
+    const updated = [...formData.materials];
+    updated[index] = file;
+    setFormData({ ...formData, materials: updated });
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -106,7 +114,9 @@ const handleFileChange = (e) => {
 
       const form = new FormData();
       form.append("subjectName", formData.subjectName);
-      form.append("materials", formData.materials); // solo un archivo
+      formData.materials.forEach((file) => {
+        form.append("materials", file);
+      });
       form.append("level", formData.level);
       form.append("schedule", formattedSchedule);
       form.append("format", formData.format);
@@ -163,15 +173,20 @@ const handleFileChange = (e) => {
                 ))}
               </select>
             </label>
-            <label>
-              Materiales:
+            <label>Materiales:</label>
+
+            {formData.materials.map((mat, index) => (
               <input
+                key={index}
                 type="file"
-                name="materials"
-                onChange={handleFileChange}
-                accept=".pdf,video/*,audio/*"
+                accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                onChange={(e) => handleFileChange(index, e.target.files[0])}
               />
-            </label>
+            ))}
+
+            <button type="button" onClick={addMaterialInput}>
+              Añadir material
+            </button>
 
             <label>Nivel:</label>
             <select
