@@ -9,9 +9,9 @@ const FormLogIn = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/user/auth/google";
-  };
+const handleGoogleLogin = () => {
+  window.location.href = import.meta.env.VITE_API_URL;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
