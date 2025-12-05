@@ -1,3 +1,5 @@
+//const API_URL = import.meta.env.VITE_API_URL+'/user'; // Usar variable de entorno para la URL base
+const API_URL = import.meta.env.VITE_API_URL+'/user'; // Usar variable de entorno para la URL base
 // Llamada para hacer signUp
 export const signUp = async (userData) => {
   try {
