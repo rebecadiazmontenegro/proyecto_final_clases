@@ -52,7 +52,7 @@ router.get(
       httpOnly: true,
       sameSite: "strict",
     });
-    res.redirect(`http://localhost:5173/dashboardteacher?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/dashboardteacher?token=${token}`);
   }
 );
 

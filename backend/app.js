@@ -58,10 +58,11 @@ app.get("/records", (req, res) => {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5175",
     credentials: true,
   })
 );
+
 
 // Middlewares
 app.use(express.json());
@@ -83,6 +84,7 @@ const classesRoutes = require("./routes/classes.routes");
 
 app.use("/user", usersRoutes);
 app.use("/classes", classesRoutes);
+
 
 if (process.env.NODE_ENV==="production") {
   // Servir archivos estáticos del frontend con React
