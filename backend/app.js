@@ -84,6 +84,15 @@ const classesRoutes = require("./routes/classes.routes");
 app.use("/user", usersRoutes);
 app.use("/classes", classesRoutes);
 
+
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// Manejar cualquier ruta que no sea de la API y servir el index.html de React
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+});
+
+
+
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
 });

@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_API_URL+'/classes'; // Usar variable de entorno para la URL base
 
 // Llamada para llamar a las ultimas 4 clases creadas en el perfil
 export const getLatestClasses = async () => {
@@ -5,7 +6,7 @@ export const getLatestClasses = async () => {
     const token = localStorage.getItem("token");
     if (!token) return [];
 
-    const res = await fetch("http://localhost:3000/classes/profile", {
+    const res = await fetch(`${API_URL}/profile`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -27,7 +28,7 @@ export const getAllClasses = async () => {
     const token = localStorage.getItem("token");
     if (!token) return [];
 
-    const res = await fetch("http://localhost:3000/classes/all", {
+    const res = await fetch(`${API_URL}/all`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -46,7 +47,7 @@ export const getAllClasses = async () => {
 //Llamada para una clase con todos los detalles
 export const getClassDetail = async (id) => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`http://localhost:3000/classes/detail/${id}`, {
+  const response = await fetch(`${API_URL}/detail/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -61,7 +62,7 @@ export const getClassDetail = async (id) => {
 //Llamada para borrar clase
 export const deleteClass = async (id) => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`http://localhost:3000/classes/detail/${id}`, {
+  const response = await fetch(`${API_URL}/detail/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -78,7 +79,7 @@ export const deleteClass = async (id) => {
 //Llamada para editar clase
 export const editClass = async (id, formData) => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`http://localhost:3000/classes/detail/${id}`, {
+  const response = await fetch(`${API_URL}/detail/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -99,7 +100,7 @@ export const editClass = async (id, formData) => {
 // Llamada para crear una clase (Dashboard)
 export const createClass = async (formData, token) => {
 
-  const response = await fetch(`http://localhost:3000/classes/create`, {
+  const response = await fetch(`${API_URL}/create`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

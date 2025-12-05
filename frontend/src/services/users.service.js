@@ -1,9 +1,10 @@
-//const API_URL = import.meta.env.VITE_API_URL+'/user'; // Usar variable de entorno para la URL base
 const API_URL = import.meta.env.VITE_API_URL+'/user'; // Usar variable de entorno para la URL base
+
+
 // Llamada para hacer signUp
 export const signUp = async (userData) => {
   try {
-    const response = await fetch(`http://localhost:3000/user/signup`, {
+    const response = await fetch(`${API_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -25,7 +26,7 @@ export const signUp = async (userData) => {
 // Llamada para hacer logIn
 export const logIn = async (email, password) => {
   try {
-    const response = await fetch(`http://localhost:3000/user/login`, {
+    const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -52,7 +53,7 @@ export const logIn = async (email, password) => {
 // Llamada para hacer logout
 export const logout = async () => {
   try {
-    const response = await fetch("http://localhost:3000/user/logout", {
+    const response = await fetch(`${API_URL}/logout`, {
       method: "GET",
       credentials: "include",
     });
