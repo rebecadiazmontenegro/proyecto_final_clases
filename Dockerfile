@@ -10,7 +10,7 @@ COPY . .
 RUN npm install
 
 # Instalar dependencias del proyecto tanto backend como frontend
-#RUN npm run install
+RUN npm run install
 
 # Construir el frontend usando el comando  del package.json principal
 RUN npm run build
