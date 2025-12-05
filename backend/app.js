@@ -86,12 +86,24 @@ app.use("/user", usersRoutes);
 app.use("/classes", classesRoutes);
 
 
-if (process.env.NODE_ENV==="production") {
-  // Servir archivos estáticos del frontend con React
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  // Manejar cualquier ruta que no sea de la API y servir el index.html de React
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+// if (process.env.NODE_ENV==="production") {
+//   // Servir archivos estáticos del frontend con React
+//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
+//   // Manejar cualquier ruta que no sea de la API y servir el index.html de React
+//   app.get("/", (req, res) => {
+//     res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+//   });
+// }
+
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
+
+  // Catch-all para React Router
+  app.get("*", (req, res) => {
+    if (!req.path.startsWith("/user") && !req.path.startsWith("/classes")) {
+      res.sendFile(path.join(frontendPath, "index.html"));
+    }
   });
 }
 
