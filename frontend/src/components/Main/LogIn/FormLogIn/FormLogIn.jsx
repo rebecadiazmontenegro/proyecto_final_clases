@@ -10,7 +10,7 @@ const FormLogIn = () => {
   const navigate = useNavigate();
 
 const handleGoogleLogin = () => {
-  window.location.href = import.meta.env.VITE_API_URL;
+  window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL;
 };
 
   const handleSubmit = async (e) => {
