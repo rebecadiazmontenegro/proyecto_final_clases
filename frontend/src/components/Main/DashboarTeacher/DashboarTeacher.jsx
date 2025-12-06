@@ -1,34 +1,247 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { createClass } from "../../../services/classes.service";
+import { logout } from "../../../services/users.service";
+
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
+const subjects = [
+  "Historia del Arte",
+  "Matemáticas",
+  "Lengua Castellana y Literatura",
+  "Inglés",
+  "Ciencias Sociales, Geografía e Historia",
+  "Biología y Geología",
+  "Física y Química",
+  "Educación Física",
+  "Tecnología",
+  "Educación Plástica y Visual",
+  "Música",
+  "Filosofía",
+  "Segunda Lengua Extranjera",
+  "Matemáticas CCSS",
+  "Matemáticas CCNN",
+  "Física",
+  "Química",
+  "Biología",
+  "Geología",
+  "Tecnología Industrial",
+  "Dibujo Técnico",
+  "Historia del Mundo Contemporáneo",
+  "Economía",
+  "Geografía",
+  "Literatura Universal",
+  "Diseño",
+  "Cultura Audiovisual",
+  "Dibujo Artístico",
+];
+
+function formatDate(date) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const seconds = String(d.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 const DashboardTeacher = () => {
+  const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    subjectName: "",
+    materials: [],
+    level: "",
+    schedule: "",
+    format: "",
+  });
+
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+  });
+
+  //Pasa las cookies que guarda el google auth al local storage
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/dashboardteacher", { replace: true });
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
+
+  const addMaterialInput = () => {
+    setFormData({
+      ...formData,
+      materials: [...formData.materials, null],
+    });
+  };
+
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:3000/user/logout", {
-        method: "GET",
-        credentials: "include", // para las cookies
-      });
-
-      if (res.ok) {
-        // Borrar token guardado en localstorage
-        localStorage.removeItem("token");
-        window.location.href = "/login";
-      } else {
-        console.error("Error al cerrar sesión");
-      }
+      await logout();
+      navigate("/login");
     } catch (error) {
-      console.error("Error en logout:", error);
+      alert(error.message || "Error al cerrar sesión");
+    }
+  };
+  const handleFileChange = (index, file) => {
+    const updated = [...formData.materials];
+    updated[index] = file;
+    setFormData({ ...formData, materials: updated });
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formattedSchedule = formatDate(new Date(formData.schedule));
+
+      const form = new FormData();
+      form.append("subjectName", formData.subjectName);
+      formData.materials.forEach((file) => {
+        form.append("materials", file);
+      });
+      form.append("level", formData.level);
+      form.append("schedule", formattedSchedule);
+      form.append("format", formData.format);
+      const token =
+        new URLSearchParams(window.location.search).get("token") ||
+        localStorage.getItem("token");
+      await createClass(form, token);
+      notyf.success("Clase creada correctamente");
+      setShowForm(false);
+      setFormData({
+        subjectName: "",
+        materials: "",
+        level: "",
+        schedule: "",
+        format: "",
+      });
+      navigate("/calendar");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
   };
 
   return (
     <section>
-      <h1>DashboardTeacher</h1>
-        <Link to="/profile">
-          <button>Ver mi perfil</button>
-        </Link>
-      <button>Crear clase</button>
-      <button onClick={handleLogout}>Cerrar sesión</button>
+      <h1>Tu tablón</h1>
+      <Link to="/profile">
+        <button className="showProfileButton">Ver mi perfil</button>
+      </Link>
+      <button className="createClassButton" onClick={() => setShowForm(true)}>
+        Crear clase
+      </button>
+      <button className="logOutButton" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
+
+      {showForm && (
+        <article className="createClassDashboard">
+          <h2>¡Crea una nueva clase!</h2>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Materia:
+              <select
+                name="subjectName"
+                value={formData.subjectName}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecciona una materia</option>
+                {subjects.map((subj, idx) => (
+                  <option key={idx} value={subj}>
+                    {subj}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>Materiales:</label>
+
+            {formData.materials.map((mat, index) => (
+              <input
+                key={index}
+                type="file"
+                accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                onChange={(e) => handleFileChange(index, e.target.files[0])}
+              />
+            ))}
+
+            <button type="button" onClick={addMaterialInput}>
+              Añadir material
+            </button>
+
+            <label>Nivel:</label>
+            <select
+              name="level"
+              value={formData.level}
+              onChange={(e) =>
+                setFormData({ ...formData, level: e.target.value })
+              }
+              required
+            >
+              <option value="">Selecciona un nivel</option>
+              <option value="Iniciación">Iniciación</option>
+              <option value="Medio">Medio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+            <label>
+              Fecha y Hora:
+              <input
+                type="datetime-local"
+                name="schedule"
+                value={formData.schedule}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    schedule: e.target.value,
+                  })
+                }
+                required
+              />
+            </label>
+            <label>Formato:</label>
+            <select
+              name="format"
+              value={formData.format}
+              onChange={(e) =>
+                setFormData({ ...formData, format: e.target.value })
+              }
+              required
+            >
+              <option value="">Selecciona un formato</option>
+              <option value="Online">Online</option>
+              <option value="Presencial">Presencial</option>
+            </select>
+            <div className="createFormButtons">
+              <button type="saveCreateButton">Guardar</button>
+              <button
+                type="cancelCreateButtom"
+                onClick={() => setShowForm(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </article>
+      )}
     </section>
   );
 };

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signUp } from "../../../../services/users.service";
 
 const FormSignUp = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +9,8 @@ const FormSignUp = () => {
     password: "",
     role: "alumno",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -19,33 +23,18 @@ const FormSignUp = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:3000/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("Usuario creado correctamente: " + data.message);
-      } else {
-    
-        alert("Error al crear usuario: " + data.error);
-      }
+      const data = await signUp(formData);
+      alert("Usuario creado correctamente: " + data.message);
+      navigate("/login");
     } catch (error) {
-      console.error("Error en la petición:", error);
-      alert("Error en el servidor");
+      alert(error.message || "Error en el servidor");
     }
   };
 
   return (
-    <form className="formRegister" onSubmit={handleSubmit}>
-      <h2>Registro</h2>
-
-      <div>
+    <section>
+      <form className="formRegister" onSubmit={handleSubmit}>
+        <h2>Crea tu cuenta</h2>
         <label>Nombre</label>
         <input
           type="text"
@@ -54,9 +43,6 @@ const FormSignUp = () => {
           onChange={handleChange}
           required
         />
-      </div>
-
-      <div>
         <label>Email</label>
         <input
           type="email"
@@ -65,9 +51,6 @@ const FormSignUp = () => {
           onChange={handleChange}
           required
         />
-      </div>
-
-      <div>
         <label>Contraseña</label>
         <input
           type="password"
@@ -76,18 +59,14 @@ const FormSignUp = () => {
           onChange={handleChange}
           required
         />
-      </div>
-
-      <div>
         <label>Rol</label>
         <select name="role" value={formData.role} onChange={handleChange}>
           <option value="alumno">Alumno</option>
           <option value="profesor">Profesor</option>
         </select>
-      </div>
-
-      <button type="submit">Registrarse</button>
-    </form>
+        <button type="submit">Registrarse</button>
+      </form>
+    </section>
   );
 };
 

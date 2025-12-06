@@ -5,7 +5,8 @@ const queries = {
     WHERE 
         email = $1;
     `,
-  getInfoProfile:`
+
+  getInfoProfile: `
     SELECT name, email, role
     FROM users
     WHERE id_user = $1;
@@ -22,5 +23,4 @@ const queries = {
     RETURNING id_user, name, email, role;
         `,
 };
-
 module.exports = queries;

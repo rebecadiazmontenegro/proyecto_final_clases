@@ -1,22 +1,45 @@
 const queries = {
-  getClassDetail: `
+  latestClasses: `
     SELECT 
-        c.id_class,
-        c.materials,
-        c.level,
-        c.schedule,
-        c.format,
-        u.name AS teacher_name,
-        s.name AS subject_name
-    FROM 
-        classes c
-    JOIN 
-        users u ON c.id_user = u.id_user
-    JOIN 
-        subjects s ON c.id_subject = s.id_subject
-    WHERE 
-        c.id_class = $1;
+      s.name AS subject,
+      c.schedule
+    FROM classes c
+    JOIN subjects s ON c.id_subject = s.id_subject
+    WHERE c.id_user = $1
+    ORDER BY c.id_class DESC
+    LIMIT 4;
     `,
+
+  allClasses: `
+  SELECT
+    c.id_class,
+    s.name AS subject,
+    c.schedule,
+    c.level
+  FROM classes c
+  JOIN subjects s ON c.id_subject = s.id_subject
+  WHERE c.id_user = $1
+  ORDER BY c.schedule;
+`,
+
+  classesDetail: `
+    SELECT 
+      c.materials,
+      c.level,
+      c.schedule,
+      c.format,
+      u.name AS teacher_name,
+      u.email AS teacher_email,
+      s.name AS subject_name
+    FROM classes c
+    JOIN users u ON c.id_user = u.id_user
+    JOIN subjects s ON c.id_subject = s.id_subject
+    WHERE c.id_class = $1
+  `,
+
+  getSubjectId: `
+    SELECT id_subject FROM subjects WHERE name = $1
+  `,
 
   createClass: `
     INSERT INTO classes (id_user, id_subject, materials, level, schedule, format)
@@ -27,7 +50,12 @@ const queries = {
   editClass: `
     UPDATE classes
     SET 
-        id_subject = (SELECT id_subject FROM subjects WHERE name = $1),
+        id_subject = (
+            SELECT id_subject 
+            FROM subjects 
+            WHERE name = $1
+            LIMIT 1
+        ),
         materials = $2, 
         level = $3, 
         schedule = $4, 
