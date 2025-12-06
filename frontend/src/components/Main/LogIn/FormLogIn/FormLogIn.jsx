@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useNavigate } from "react-router-dom";
 import { logIn } from "../../../../services/users.service";
+import { UserContext } from "../../../../context/UserContext";
 
 const FormLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser } = useContext(UserContext);
+  
   const navigate = useNavigate();
 
 const handleGoogleLogin = () => {
@@ -18,8 +21,9 @@ const handleGoogleLogin = () => {
     setLoading(true);
 
     try {
-      await logIn(email, password);
+      const response = await logIn(email, password);
       navigate("/dashboardteacher");
+      setUser(response.user);
     } catch (error) {
       alert(error.message || "Error al iniciar sesión");
     } finally {

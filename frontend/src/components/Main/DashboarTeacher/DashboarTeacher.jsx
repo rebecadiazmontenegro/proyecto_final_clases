@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createClass } from "../../../services/classes.service";
 import { logout } from "../../../services/users.service";
+import { UserContext } from "../../../context/UserContext";
 
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -58,7 +59,7 @@ const DashboardTeacher = () => {
     schedule: "",
     format: "",
   });
-
+  const { user } = useContext(UserContext);
   const notyf = new Notyf({
     duration: 3000,
     position: { x: "center", y: "top" },
@@ -142,7 +143,7 @@ const DashboardTeacher = () => {
 
   return (
     <section>
-      <h1>Tu tablón</h1>
+      <h1>¡ Bienvenid@ {user ? `, ${user.name}` : ""}! Este es tu tablón</h1>
       <Link to="/profile">
         <button className="showProfileButton">Ver mi perfil</button>
       </Link>
