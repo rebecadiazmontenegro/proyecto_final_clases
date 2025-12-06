@@ -4,17 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { logIn } from "../../../../services/users.service";
 import { UserContext } from "../../../../context/UserContext";
 
+import loginPerson from "../../../../assets/login_person.png";
+import { FaGoogle } from "react-icons/fa";
+
 const FormLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { setUser } = useContext(UserContext);
-  
+
   const navigate = useNavigate();
 
-const handleGoogleLogin = () => {
-  window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL;
-};
+  const handleGoogleLogin = () => {
+    window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,31 +45,33 @@ const handleGoogleLogin = () => {
   }
 
   return (
-    <section>
+    <section className="logIn">
+      <img className="loginPerson" src={loginPerson} alt="Home Person" />
       <form className="formLogin" onSubmit={handleSubmit}>
-        <h2>Iniciar sesión</h2>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label>Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        <button type="submit">Entrar</button>
-        <button
-          type="button"
-          className="googleButton"
-          onClick={handleGoogleLogin}
-        >
+        <h1>Iniciar sesión</h1>
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Introduce tu correo"
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <label>Contraseña</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Introduce tu contraseña"
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="loginButtons">
+        <button className="acceptButton" type="submit">Aceptar</button>
+        <button className="googleButton" onClick={handleGoogleLogin}>
+          <FaGoogle size={20} />
           Iniciar sesión con Google
         </button>
+        </div>
       </form>
     </section>
   );

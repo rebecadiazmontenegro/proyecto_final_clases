@@ -1,0 +1,139 @@
+.logIn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 4px solid var(--black);
+  border-radius: 32px;
+  padding: 24px;
+  margin: 0 auto;
+
+  .loginPerson {
+    width: 310px;
+    margin-bottom: 0;
+  }
+
+  .formLogin h1 {
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+
+  .formLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+
+    label {
+      font-weight: var(--font-medium);
+      font-size: 20px;
+      margin-top: 8px;
+    }
+
+    input {
+      width: 300px;
+      padding: 12px 16px;
+      border: 2px solid var(--grey);
+      border-radius: 50px;
+      font-size: 16px;
+      outline: none;
+      
+
+      &:focus {
+        border-color: var(--pink);
+      }
+    }
+
+    .loginButtons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .acceptButton {
+      background-color: var(--white);
+    }
+
+    .acceptButton,
+    .googleButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: var(--font-medium);
+      border: 2px solid var(--black);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: var(--green);
+        color: var(--black);
+      }
+    }
+
+    .googleButton {
+      background-color: var(--black);
+      color: var(--white);
+      margin-top: 8px;
+      gap: 12px;
+
+      &:hover {
+        background-color: var(--green);
+        color: var(--black);
+        border: 2px solid var(--black);
+      }
+    }
+  }
+}
+
+/* ====== Responsive ====== */
+@media (min-width: 1024px) {
+  .logIn {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 1320px;
+    padding: 32px;
+    gap: 100px;
+    margin: 0 auto;
+
+    .loginPerson {
+      width: 400px;
+    }
+
+    .formLogin {
+      max-width: 400px;
+      justify-content: center;
+      align-items: center;
+
+      h1 {
+        text-align: left;
+      }
+
+      input {
+        font-size: 18px;
+        width: 500px;
+      }
+
+      .acceptButton,
+      .googleButton {
+        width: 300px;
+        font-size: 18px;
+        padding: 14px 20px;
+      }
+
+    .googleButton {
+        gap:8px
+      }
+
+      .loginButtons {
+        flex-direction: column;
+        gap: 16px;
+        justify-content: flex-start;
+      }
+    }
+  }
+}
