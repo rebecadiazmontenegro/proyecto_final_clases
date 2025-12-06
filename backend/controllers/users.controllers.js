@@ -2,6 +2,8 @@ const usersModels = require("../models/users.models"); // Importar el modelo de 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const {validationResult} = require("express-validator");
+
 // GET http://localhost:3000/login
 const loginUser = async (req, res) => {
   try {
@@ -42,31 +44,16 @@ const loginUser = async (req, res) => {
   }
 };
 
-// POST http://localhost:3000/user/signup
-// const createUser = async (req, res) => {
-//   try {
-//     const { name, email, password, role } = req.body;
-//     const encryptedPassword = await bcrypt.hash(password, 10);
-//     const newUser = {
-//       name,
-//       email,
-//       password: encryptedPassword,
-//       role,
-//     };
-//     const response = await usersModels.createUserModel(newUser);
-//     res.status(201).json({
-//       message: `Usuario creado: ${email}`,
-//     });
-//   } catch (error) {
-//     console.error("Error al crear el usuario:", error);
-//     res.status(500).json({
-//       message: "Error al crear el usuario",
-//       error: error.message,
-//     });
-//   }
-// };
-
 const createUser = async (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
   try {
     const { name, email, password, role } = req.body;
 

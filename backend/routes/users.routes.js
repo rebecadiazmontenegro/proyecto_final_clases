@@ -4,11 +4,25 @@ const passport = require("../config/googleAuth");
 const usersController = require("../controllers/users.controllers");
 const jwt = require("jsonwebtoken");
 
+const {
+  validateCreateUser,
+  validateLoginUser,
+} = require("../validators/users.validator");
+
 // POST http://localhost:3000/signup
-router.post("/signup", usersController.createUser);
+router.post(
+  "/signup",
+  validateCreateUser,
+  usersController.createUser
+);
+
 
 // POST http://localhost:3000/login
-router.post("/login", usersController.loginUser);
+router.post(
+  "/login",
+  validateLoginUser,
+  usersController.loginUser
+);
 
 // GET http://localhost:3000/logOUT
 router.get("/logout", (req, res) => {
