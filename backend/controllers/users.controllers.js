@@ -43,28 +43,68 @@ const loginUser = async (req, res) => {
 };
 
 // POST http://localhost:3000/user/signup
+// const createUser = async (req, res) => {
+//   try {
+//     const { name, email, password, role } = req.body;
+//     const encryptedPassword = await bcrypt.hash(password, 10);
+//     const newUser = {
+//       name,
+//       email,
+//       password: encryptedPassword,
+//       role,
+//     };
+//     const response = await usersModels.createUserModel(newUser);
+//     res.status(201).json({
+//       message: `Usuario creado: ${email}`,
+//     });
+//   } catch (error) {
+//     console.error("Error al crear el usuario:", error);
+//     res.status(500).json({
+//       message: "Error al crear el usuario",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Nombre, email y contraseña son obligatorios",
+      });
+    }
+
     const encryptedPassword = await bcrypt.hash(password, 10);
+
     const newUser = {
       name,
       email,
       password: encryptedPassword,
-      role,
+      role: role || "Profesor",
     };
+
     const response = await usersModels.createUserModel(newUser);
-    res.status(201).json({
-      message: `Usuario creado: ${email}`,
+
+    return res.status(201).json({
+      message: `Usuario creado correctamente`,
+      user: {
+        name,
+        email,
+        role: newUser.role,
+      },
     });
   } catch (error) {
     console.error("Error al crear el usuario:", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       message: "Error al crear el usuario",
       error: error.message,
     });
   }
 };
+
 
 
 function logout(req, res) {

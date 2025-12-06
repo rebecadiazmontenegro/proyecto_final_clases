@@ -63,7 +63,6 @@ app.use(
   })
 );
 
-
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
