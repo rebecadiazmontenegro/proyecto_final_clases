@@ -71,7 +71,18 @@ const editClass = async (req, res) => {
     const { id } = req.params;
     const id_user = req.user.id;
 
-    const { subject_name, materials, level, schedule, format } = req.body;
+    const { subject_name, level, schedule, format, oldMaterials } = req.body;
+
+    const newMaterials = req.files
+      ? req.files.map(
+          (file) =>
+            `${req.protocol}://${req.get("host")}/uploads/${file.filename}`
+        )
+      : [];
+
+    const materials = oldMaterials
+      ? [...JSON.parse(oldMaterials), ...newMaterials]
+      : newMaterials;
 
     const updated = await classesModel.editClassModel({
       subject_name,

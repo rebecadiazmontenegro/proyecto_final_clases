@@ -1,0 +1,67 @@
+.allClassesCard {
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  border-radius: 32px;
+  background-color: var(--pink);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+
+  h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid var(--black);
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+   a {
+        text-decoration: none;
+    }
+
+  .detailsButton {
+    display: flex;
+    margin-top: 12px;
+    align-self: flex-start;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 2px solid var(--black);
+    background-color: var(--black);
+    gap: 8px;
+    color: var(--white);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+
+    &:hover {
+      background-color: var(--pink);
+      color: var(--black);
+    }
+  }
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* GRID RESPONSIVE */
+@media (min-width: 1024px) {
+  .allClasses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: flex-start;
+
+    .allClassesCard {
+      width: 385px;
+      margin-bottom: 0;
+    }
+  }
+}

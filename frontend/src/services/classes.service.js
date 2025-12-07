@@ -82,10 +82,9 @@ export const editClass = async (id, formData) => {
   const response = await fetch(`${API_URL}/detail/${id}`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(formData),
+   body: formData,
   });
 
   const data = await response.json();

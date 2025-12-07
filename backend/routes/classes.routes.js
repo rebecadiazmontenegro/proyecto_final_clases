@@ -15,7 +15,7 @@ router.get("/detail/:id", authMiddleware, classesController.getClassDetail);
 
 router.delete("/detail/:id", authMiddleware, classesController.deleteClass);
 
-router.put("/detail/:id", authMiddleware, classesController.editClass);
+router.put("/detail/:id", authMiddleware, upload.array("materials", 10), classesController.editClass);
 
 router.post("/create", authMiddleware, upload.array("materials", 10), classesController.createClass);
 

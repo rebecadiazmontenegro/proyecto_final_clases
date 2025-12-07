@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
+import { FaArrowLeft } from "react-icons/fa";
 import ClassesCard from "./ClassesCard/ClassesCard";
 import { getAllClasses } from "../../../services/classes.service";
+
 
 const subjects = [
   "Historia del Arte",
@@ -60,10 +62,9 @@ const ClassesList = () => {
 
   if (loading) {
     return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+      <div className="beatLoader"
       >
-        <BeatLoader color="#4caf50" size={15} margin={2} loading={true} />
+        <BeatLoader color="#ed5fa4ff" size={15} margin={2} loading={true} />
       </div>
     );
   }
@@ -75,12 +76,14 @@ const ClassesList = () => {
   return (
     <section className="allClasses">
       <button className="backButton" onClick={() => navigate(-1)}>
+        <FaArrowLeft />
         Volver
       </button>
       <h1>Todas tus clases</h1>
       <label>
         Filtrar por materia:
         <select
+          className="filterSelect"
           value={filterSubject}
           onChange={(e) => setFilterSubject(e.target.value)}
         >
@@ -92,20 +95,21 @@ const ClassesList = () => {
           ))}
         </select>
       </label>
-
-      {filteredClasses.length > 0 ? (
-        filteredClasses.map((cls, index) => (
-          <ClassesCard
-            key={index}
-            id_class={cls.id_class}
-            subject={cls.subject}
-            schedule={cls.schedule}
-            level={cls.level}
-          />
-        ))
-      ) : (
-        <p>No hay clases disponibles</p>
-      )}
+      <div className="cardsGrid">
+    {filteredClasses.length > 0 ? (
+      filteredClasses.map((cls, index) => (
+        <ClassesCard
+          key={index}
+          id_class={cls.id_class}
+          subject={cls.subject}
+          schedule={cls.schedule}
+          level={cls.level}
+        />
+      ))
+    ) : (
+      <p>No hay clases disponibles</p>
+    )}
+  </div>
     </section>
   );
 };
