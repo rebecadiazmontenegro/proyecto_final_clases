@@ -4,6 +4,8 @@ import BeatLoader from "react-spinners/BeatLoader";
 import ClassesCard from "./ClassesCard/ClassesCard";
 import { getAllClasses } from "../../../services/classes.service";
 
+import { FaArrowLeft } from "react-icons/fa";
+
 const subjects = [
   "Historia del Arte",
   "Matemáticas",
@@ -75,12 +77,14 @@ const ClassesList = () => {
   return (
     <section className="allClasses">
       <button className="backButton" onClick={() => navigate(-1)}>
+        <FaArrowLeft />
         Volver
       </button>
       <h1>Todas tus clases</h1>
       <label>
         Filtrar por materia:
         <select
+          className="filterSelect"
           value={filterSubject}
           onChange={(e) => setFilterSubject(e.target.value)}
         >
@@ -92,20 +96,21 @@ const ClassesList = () => {
           ))}
         </select>
       </label>
-
-      {filteredClasses.length > 0 ? (
-        filteredClasses.map((cls, index) => (
-          <ClassesCard
-            key={index}
-            id_class={cls.id_class}
-            subject={cls.subject}
-            schedule={cls.schedule}
-            level={cls.level}
-          />
-        ))
-      ) : (
-        <p>No hay clases disponibles</p>
-      )}
+      <div className="cardsGrid">
+    {filteredClasses.length > 0 ? (
+      filteredClasses.map((cls, index) => (
+        <ClassesCard
+          key={index}
+          id_class={cls.id_class}
+          subject={cls.subject}
+          schedule={cls.schedule}
+          level={cls.level}
+        />
+      ))
+    ) : (
+      <p>No hay clases disponibles</p>
+    )}
+  </div>
     </section>
   );
 };

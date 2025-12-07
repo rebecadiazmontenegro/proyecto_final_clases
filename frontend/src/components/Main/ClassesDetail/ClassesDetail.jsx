@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
-
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import BeatLoader from "react-spinners/BeatLoader";
-
+import {
+  FaEdit,
+  FaTrash,
+  FaArrowLeft,
+  FaFileAlt,
+  FaUser,
+  FaTimes,
+  FaPlus,
+  FaSave,
+} from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 
 import {
@@ -11,6 +19,37 @@ import {
   deleteClass,
   editClass,
 } from "../../../services/classes.service";
+
+const subjects = [
+  "Historia del Arte",
+  "Matemáticas",
+  "Lengua Castellana y Literatura",
+  "Inglés",
+  "Ciencias Sociales, Geografía e Historia",
+  "Biología y Geología",
+  "Física y Química",
+  "Educación Física",
+  "Tecnología",
+  "Educación Plástica y Visual",
+  "Música",
+  "Filosofía",
+  "Segunda Lengua Extranjera",
+  "Matemáticas CCSS",
+  "Matemáticas CCNN",
+  "Física",
+  "Química",
+  "Biología",
+  "Geología",
+  "Tecnología Industrial",
+  "Dibujo Técnico",
+  "Historia del Mundo Contemporáneo",
+  "Economía",
+  "Geografía",
+  "Literatura Universal",
+  "Diseño",
+  "Cultura Audiovisual",
+  "Dibujo Artístico",
+];
 
 const ClassesDetail = () => {
   const { id } = useParams();
@@ -24,8 +63,9 @@ const ClassesDetail = () => {
     schedule: "",
     level: "",
     format: "",
-    materials: "",
   });
+  const [existingMaterials, setExistingMaterials] = useState([]);
+  const [newMaterials, setNewMaterials] = useState([]);
 
   const notyf = new Notyf({
     duration: 3000,
@@ -43,8 +83,8 @@ const ClassesDetail = () => {
           schedule: data.schedule,
           level: data.level,
           format: data.format,
-          materials: data.materials,
         });
+        setExistingMaterials(data.materials || []);
       } catch (err) {
         console.error("Error al obtener detalle", err);
         notyf.error("Error al obtener detalle de la clase");
@@ -52,13 +92,11 @@ const ClassesDetail = () => {
         setLoading(false);
       }
     };
-
     fetchDetail();
   }, [id]);
 
   const handleDelete = async () => {
     if (!window.confirm("¿Seguro que quieres eliminar esta clase?")) return;
-
     try {
       await deleteClass(id);
       notyf.success("Clase eliminada correctamente");
@@ -69,12 +107,59 @@ const ClassesDetail = () => {
     }
   };
 
+  const handleFileChange = (index, file) => {
+    const updated = [...newMaterials];
+    updated[index] = file;
+    setNewMaterials(updated);
+  };
+
+  const addMaterialInput = () => {
+    setNewMaterials([...newMaterials, null]);
+  };
+
+  // Función para borrar un material existente
+  const handleRemoveExistingMaterial = (index) => {
+    const updated = [...existingMaterials];
+    updated.splice(index, 1);
+    setExistingMaterials(updated);
+  };
+
+  // Función para borrar un material nuevo
+  const handleRemoveNewMaterial = (index) => {
+    const updated = [...newMaterials];
+    updated.splice(index, 1);
+    setNewMaterials(updated);
+  };
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await editClass(id, formData);
+      const form = new FormData();
+      form.append("subject_name", formData.subject_name);
+      form.append("level", formData.level);
+      form.append("schedule", formData.schedule);
+      form.append("format", formData.format);
+
+      // Añadir archivos nuevos
+      newMaterials.forEach((file) => {
+        if (file) form.append("materials", file);
+      });
+
+      form.append("oldMaterials", JSON.stringify(existingMaterials));
+
+      await editClass(id, form);
       notyf.success("Clase actualizada correctamente");
-      setClassDetail({ ...classDetail, ...formData });
+
+      const updatedData = await getClassDetail(id);
+      setClassDetail(updatedData);
+      setFormData({
+        subject_name: updatedData.subject_name,
+        schedule: updatedData.schedule,
+        level: updatedData.level,
+        format: updatedData.format,
+      });
+      setExistingMaterials(updatedData.materials || []);
+      setNewMaterials([]);
       setIsEditing(false);
     } catch (err) {
       console.error("Error al editar", err);
@@ -97,9 +182,10 @@ const ClassesDetail = () => {
   return (
     <section className="classDatail">
       <button className="backButton" onClick={() => navigate(-1)}>
-        Volver
+        <FaArrowLeft /> Volver
       </button>
-      <h1>Toda la información sobre tu clase</h1>
+      <h1>Todos los detalles</h1>
+
       {!isEditing ? (
         <article className="classDetailInfo">
           <h2>{classDetail.subject_name}</h2>
@@ -112,30 +198,47 @@ const ClassesDetail = () => {
           <p>
             <strong>Formato:</strong> {classDetail.format}
           </p>
-          <h3>Materiales</h3>
-          <ul>
-            {classDetail.materials.map((url, idx) => (
-              <li key={idx}>
-                <a href={url} target="_blank">
-                  Material {idx + 1}
-                </a>
-              </li>
-            ))}
-          </ul>
 
-          <h3>Profesor</h3>
-          <p>{classDetail.teacher_name}</p>
-          <p>{classDetail.teacher_email}</p>
+          <h3>
+            <FaFileAlt /> Materiales
+          </h3>
+          {existingMaterials.length > 0 ? (
+            <ul>
+              {existingMaterials.map((url, idx) => (
+                <li key={idx}>
+                  <a className="linkMaterial" href={url} target="_blank" rel="noopener noreferrer">
+                    Material {idx + 1}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No hay materiales disponibles</p>
+          )}
 
-          <div>
-            <button onClick={() => setIsEditing(true)}>Editar</button>
-            <button onClick={handleDelete}>Eliminar</button>
+          <h3>
+            <FaUser /> Profesor
+          </h3>
+          <p>
+            <strong>Nombre:</strong> {classDetail.teacher_name}
+          </p>
+          <p>
+            <strong>Correo:</strong> {classDetail.teacher_email}
+          </p>
+
+          <div className="ClassesDetailsButtons">
+            <button className="editButton" onClick={() => setIsEditing(true)}>
+              <FaEdit /> Editar
+            </button>
+            <button className="deleteButton" onClick={handleDelete}>
+              <FaTrash /> Eliminar
+            </button>
           </div>
         </article>
       ) : (
-        // Formulario para editar empieza aqui
         <form className="editForm" onSubmit={handleEditSubmit}>
           <h2>Editar clase</h2>
+
           <label>Asignatura:</label>
           <select
             name="subject_name"
@@ -145,54 +248,24 @@ const ClassesDetail = () => {
             }
             required
           >
-            <option value="Historia del Arte">Historia del Arte</option>
-            <option value="Matemáticas">Matemáticas</option>
-            <option value="Lengua Castellana y Literatura">
-              Lengua Castellana y Literatura
-            </option>
-            <option value="Inglés">Inglés</option>
-            <option value="Ciencias Sociales, Geografía e Historia">
-              Ciencias Sociales, Geografía e Historia
-            </option>
-            <option value="Biología y Geología">Biología y Geología</option>
-            <option value="Física y Química">Física y Química</option>
-            <option value="Educación Física">Educación Física</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Educación Plástica y Visual">
-              Educación Plástica y Visual
-            </option>
-            <option value="Música">Música</option>
-            <option value="Filosofía">Filosofía</option>
-            <option value="Segunda Lengua Extranjera">
-              Segunda Lengua Extranjera
-            </option>
-            <option value="Matemáticas CCSS">Matemáticas CCSS</option>
-            <option value="Matemáticas CCNN">Matemáticas CCNN</option>
-            <option value="Física">Física</option>
-            <option value="Química">Química</option>
-            <option value="Biología">Biología</option>
-            <option value="Geología">Geología</option>
-            <option value="Tecnología Industrial">Tecnología Industrial</option>
-            <option value="Dibujo Técnico">Dibujo Técnico</option>
-            <option value="Historia del Mundo Contemporáneo">
-              Historia del Mundo Contemporáneo
-            </option>
-            <option value="Economía">Economía</option>
-            <option value="Geografía">Geografía</option>
-            <option value="Literatura Universal">Literatura Universal</option>
-            <option value="Diseño">Diseño</option>
-            <option value="Cultura Audiovisual">Cultura Audiovisual</option>
-            <option value="Dibujo Artístico">Dibujo Artístico</option>
+            {subjects.map((subj, idx) => (
+              <option key={idx} value={subj}>
+                {subj}
+              </option>
+            ))}
           </select>
+
           <label>Horario:</label>
           <input
-            type="text"
-            placeholder="dd/mm/yy hh/mm"
+            type="datetime-local"
+            name="schedule"
             value={formData.schedule}
             onChange={(e) =>
               setFormData({ ...formData, schedule: e.target.value })
             }
+            required
           />
+
           <label>Nivel:</label>
           <select
             name="level"
@@ -207,6 +280,7 @@ const ClassesDetail = () => {
             <option value="Medio">Medio</option>
             <option value="Avanzado">Avanzado</option>
           </select>
+
           <label>Formato:</label>
           <select
             name="format"
@@ -220,18 +294,58 @@ const ClassesDetail = () => {
             <option value="Online">Online</option>
             <option value="Presencial">Presencial</option>
           </select>
-          <label>Materiales:</label>
-          <input
-            type="text"
-            value={formData.materials}
-            onChange={(e) =>
-              setFormData({ ...formData, materials: e.target.value })
-            }
-          />
-          <div>
-            <button type="saveEdit">Guardar</button>
-            <button type="cancelEdit" onClick={() => setIsEditing(false)}>
-              Cancelar
+
+          <label className="labelMaterial">Materiales existentes:</label>
+          {existingMaterials.length > 0 ? (
+            <ul>
+              {existingMaterials.map((url, idx) => (
+                <li key={idx}>
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    Material {idx + 1}
+                  </a>
+                  <button
+                    className="deleteMaterialButton"
+                    type="button"
+                    onClick={() => handleRemoveExistingMaterial(idx)}
+                  >
+                    <FaTimes />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No hay materiales existentes</p>
+          )}
+          <label className="labelMaterial">Materiales nuevos:</label>
+          {newMaterials.map((file, idx) => (
+            <article key={idx}>
+              <p>{file ? file.name : "Archivo no seleccionado"}</p>
+              <div className="newMaterial">
+                <input
+                  className="newMaterialInput"
+                  type="file"
+                  accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                  onChange={(e) => handleFileChange(idx, e.target.files[0])}
+                />
+                <button
+                  className="deleteMaterialButton"
+                  type="button"
+                  onClick={() => handleRemoveNewMaterial(idx)}
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            </article>
+          ))}
+          <button className="addNewMaterialEdit" type="button" onClick={addMaterialInput}>
+            <FaPlus /> Añadir material
+          </button>
+          <div className="editButtons">
+            <button className="saveEditButton" type="submit">
+              <FaSave /> Guardar
+            </button>
+            <button className="cancelarEditButton" type="button" onClick={() => setIsEditing(false)}>
+              <FaTimes /> Cancelar
             </button>
           </div>
         </form>

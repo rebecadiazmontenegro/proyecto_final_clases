@@ -35,7 +35,7 @@
 
 @media (min-width: 1024px) {
   .userInfo {
-    flex-direction: row;       
+    flex-direction: row;
     align-items: center;
     padding: 32px;
     width: 800px;
@@ -43,12 +43,12 @@
 
     .profilePerson {
       width: 300px;
-      margin-bottom: 0;       
+      margin-bottom: 0;
     }
 
-    .infoUserCard {    
-        align-items: start;
-        justify-content: start;        
+    .infoUserCard {
+      align-items: start;
+      justify-content: start;
       p {
         font-size: 20px;
       }
