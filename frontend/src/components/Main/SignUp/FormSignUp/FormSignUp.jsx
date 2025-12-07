@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { signUp } from "../../../../services/users.service";
 import signupPerson from "../../../../assets/signup_person.png";
 
@@ -44,7 +45,12 @@ const FormSignUp = () => {
 
     try {
       const data = await signUp(formData);
-      alert("Usuario creado correctamente: " + data.message);
+      Swal.fire({
+      icon: "success",
+      title: "¡Registro exitoso!",
+      text: data.message || "Usuario creado correctamente",
+      confirmButtonText: "Aceptar",
+    });
       navigate("/login");
     } catch (error) {
       //Para poder enseñar el error debajo del input y no en un alert

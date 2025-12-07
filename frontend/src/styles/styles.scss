@@ -1,12 +1,12 @@
 @use "./views/index";
 @use "./views/App";
 
-@use "./components/Header.scss";
-@use "./components/Nav.scss";
+@use "./components/Header";
+@use "./components/Nav";
 
 @use "./components/Home";
 
-@use "./components/FormLogIn";
+@use "./components/FormLogin";
 @use "./components/FormSignUp";
 
 @use "./components/DashboardTeacher";
