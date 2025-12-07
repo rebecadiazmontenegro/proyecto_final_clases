@@ -1,0 +1,270 @@
+.dashboardTeacher {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--black);
+  border-radius: 32px;
+  padding: 16px;
+  margin: 0 auto;
+  gap: 16px;
+
+  .dashboardPerson {
+    width: 350px;
+  }
+
+  .dashboardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 45px;
+  }
+
+  .showProfileButton,
+  .createClassButton,
+  .logOutButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 350px;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: var(--font-medium);
+    border: 2px solid var(--black);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .showProfileButton,
+  .createClassButton {
+    background-color: var(--white);
+
+    &:hover {
+      background-color: var(--green);
+    }
+  }
+
+  .logOutButton {
+    background-color: var(--black);
+    color: var(--white);
+
+    &:hover {
+      background-color: var(--green);
+      color: var(--black);
+    }
+  }
+}
+
+.createClassDashboard {
+  border-radius: 32px;
+  margin-top: 24px;
+
+  h2 {
+    text-align: start;
+    font-size: 30px;
+    margin-bottom: 16px;
+  }
+
+  .createClassDashboardForm {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    label {
+      font-weight: var(--font-medium);
+      font-size: 20px;
+    }
+
+    .selectSubjectDashboard {
+      margin-top: 12px;
+    }
+
+    .formatSelectDashboard,
+    .levelInputDashBoard {
+      margin-top: -12px;
+    }
+
+    .selectSubjectDashboard,
+    .formatSelectDashboard,
+    .levelInputDashBoard,
+    .dateInputDashboard {
+      width: 350px;
+      padding: 8px 16px;
+      border: 2px solid var(--grey);
+      border-radius: 50px;
+      font-size: 16px;
+      outline: none;
+      background-color: var(--white);
+
+      &:focus {
+        border-color: var(--pink);
+      }
+    }
+
+    .dateInputDashboard {
+      width: 310px;
+      margin-top: 12px;
+    }
+
+    .addMaterialButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 350px;
+      padding: 8px 24px;
+      gap: 8px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: var(--font-medium);
+      background-color: var(--pink);
+      color: var(--black);
+      border: 2px solid var(--pink);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0;
+
+      &:hover {
+        background: var(--pink);
+        color: var(--black);
+      }
+    }
+
+    input[type="file"] {
+      padding: 8px;
+      border-radius: 8px;
+      width: 330px;
+      border: 2px solid var(--pink);
+    }
+
+    .formatSelectDashboard,
+    .selectSubjectDashboard {
+      cursor: pointer;
+    }
+
+    .createFormButtons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+
+      .saveCreateButton,
+      .cancelCreateButtom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        width: 350px;
+        padding: 8px 24px;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: var(--font-medium);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .saveCreateButton {
+        background-color: var(--black);
+        color: var(--white);
+
+        &:hover {
+          background-color: var(--green);
+          color: var(--black);
+        }
+      }
+
+      .cancelCreateButtom {
+        background-color: var(--white);
+        color: var(--black);
+
+        &:hover {
+          background-color: var(--green);
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboardTeacher {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 1320px;
+    padding: 32px;
+  }
+
+  .dashboardPerson {
+    width: 100px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .dashboardContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboardContent h1 {
+    text-align: center;
+    font-size: 48px;
+    margin: 0;
+  }
+
+  .createClassDashboard {
+    margin-left: 64px; 
+  }
+
+  .dashboardContent .showProfileButton,
+  .dashboardContent .createClassButton,
+  .dashboardContent .logOutButton {
+    width: 450px;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .dashboardContent .createClassDashboardForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 20px;
+  }
+
+  .dashboardContent .createClassDashboardForm label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dashboardContent .createClassDashboardForm input,
+  .dashboardContent .createClassDashboardForm select {
+    width: 100%;
+  }
+
+  .dashboardContent .createFormButtons {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .dashboardContent .createFormButtons .saveCreateButton,
+  .dashboardContent .createFormButtons .cancelCreateButtom {
+    width: 200px;
+  }
+  .createClassDashboardForm label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
