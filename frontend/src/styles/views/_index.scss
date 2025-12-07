@@ -33,8 +33,23 @@ main {
   margin: 20px;
   flex: 1;
 }
+
+.beatLoader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  width: 100vh;
+}
+
+
 @media (min-width: 1024px) {
   main {
   padding-top: 150px;
+}
+
+.beatLoader {
+  height: 75vh;
+  width: 200vh;
 }
 }

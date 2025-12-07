@@ -169,10 +169,9 @@ const ClassesDetail = () => {
 
   if (loading) {
     return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+      <div className="beatLoader"
       >
-        <BeatLoader color="#4caf50" size={15} margin={2} loading={true} />
+        <BeatLoader color="#ed5fa4ff" size={15} margin={2} loading={true} />
       </div>
     );
   }
@@ -189,6 +188,8 @@ const ClassesDetail = () => {
       {!isEditing ? (
         <article className="classDetailInfo">
           <h2>{classDetail.subject_name}</h2>
+          <aside>
+            <h3>Información de la clase</h3>
           <p>
             <strong>Horario:</strong> {classDetail.schedule}
           </p>
@@ -198,7 +199,8 @@ const ClassesDetail = () => {
           <p>
             <strong>Formato:</strong> {classDetail.format}
           </p>
-
+        </aside>
+        <aside>
           <h3>
             <FaFileAlt /> Materiales
           </h3>
@@ -215,7 +217,8 @@ const ClassesDetail = () => {
           ) : (
             <p>No hay materiales disponibles</p>
           )}
-
+          </aside>
+          <aside>
           <h3>
             <FaUser /> Profesor
           </h3>
@@ -225,7 +228,7 @@ const ClassesDetail = () => {
           <p>
             <strong>Correo:</strong> {classDetail.teacher_email}
           </p>
-
+          </aside>
           <div className="ClassesDetailsButtons">
             <button className="editButton" onClick={() => setIsEditing(true)}>
               <FaEdit /> Editar
@@ -257,6 +260,7 @@ const ClassesDetail = () => {
 
           <label>Horario:</label>
           <input
+            className="dateEdit"
             type="datetime-local"
             name="schedule"
             value={formData.schedule}
@@ -294,7 +298,7 @@ const ClassesDetail = () => {
             <option value="Online">Online</option>
             <option value="Presencial">Presencial</option>
           </select>
-
+            <article>
           <label className="labelMaterial">Materiales existentes:</label>
           {existingMaterials.length > 0 ? (
             <ul>
@@ -316,9 +320,11 @@ const ClassesDetail = () => {
           ) : (
             <p>No hay materiales existentes</p>
           )}
+          </article>
+          <article>
           <label className="labelMaterial">Materiales nuevos:</label>
           {newMaterials.map((file, idx) => (
-            <article key={idx}>
+            <aside key={idx}>
               <p>{file ? file.name : "Archivo no seleccionado"}</p>
               <div className="newMaterial">
                 <input
@@ -335,11 +341,12 @@ const ClassesDetail = () => {
                   <FaTimes />
                 </button>
               </div>
-            </article>
+            </aside>
           ))}
           <button className="addNewMaterialEdit" type="button" onClick={addMaterialInput}>
             <FaPlus /> Añadir material
           </button>
+          </article>
           <div className="editButtons">
             <button className="saveEditButton" type="submit">
               <FaSave /> Guardar

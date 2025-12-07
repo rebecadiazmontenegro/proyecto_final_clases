@@ -40,10 +40,9 @@ const FormLogIn = () => {
 
   if (loading) {
     return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}
+      <div className="beatLoader"
       >
-        <BeatLoader color="#4caf50" size={15} margin={2} loading={true} />
+        <BeatLoader color="#ed5fa4ff" size={15} margin={2} loading={true} />
       </div>
     );
   }

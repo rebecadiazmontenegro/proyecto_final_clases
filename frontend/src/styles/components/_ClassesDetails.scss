@@ -302,7 +302,7 @@
     cursor: pointer;
     font-weight: var(--font-medium);
     transition: all 0.3s ease;
-    margin-top: 12px;
+    margin-top: 24px;
 
     &:hover {
       background-color: var(--white);
@@ -312,11 +312,70 @@
   }
 }
 
-/* ---------- DESKTOP ---------- */
 @media (min-width: 1024px) {
-  .classDatail {
-    h1 {
-      margin-bottom: 16px;
-    }
+  .classDatail h1 {
+    align-self: center;
+  }
+
+  .classDetailInfo,
+  .editForm {
+    width: 1200px;
+    max-width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 32px;
+    align-items: start;
+  }
+
+  .classDetailInfo h2,
+  .editForm h2 {
+    grid-column: 1 / -1;
+  }
+
+  .editForm label {
+    font-size: 18px;
+  }
+
+  .editForm .formRow {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .editForm input,
+  .editForm select {
+    width: 800px;
+  }
+
+  .editForm input[type="datetime-local"] {
+    width: 765px;
+  }
+
+  .editForm ul {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .editForm ul li {
+    flex: 1 1 calc(50% - 16px);
+  }
+
+  .ClassesDetailsButtons,
+  .editButtons {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .newMaterial {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .addNewMaterialEdit {
+    justify-self: start;
   }
 }
