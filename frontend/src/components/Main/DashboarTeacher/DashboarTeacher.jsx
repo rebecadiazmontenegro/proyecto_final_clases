@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createClass } from "../../../services/classes.service";
-import { logout } from "../../../services/users.service";
-
+import { FaUser, FaPlus, FaSignOutAlt, FaSave, FaTimes } from "react-icons/fa";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { createClass } from "../../../services/classes.service";
+import { logout } from "../../../services/users.service";
+import { UserContext } from "../../../context/UserContext";
+import dashboardPerson from "../../../assets/dashboard_person.png";
+
 
 const subjects = [
   "Historia del Arte",
@@ -58,7 +61,7 @@ const DashboardTeacher = () => {
     schedule: "",
     format: "",
   });
-
+  const { user } = useContext(UserContext);
   const notyf = new Notyf({
     duration: 3000,
     position: { x: "center", y: "top" },
@@ -141,26 +144,35 @@ const DashboardTeacher = () => {
   };
 
   return (
-    <section>
-      <h1>Tu tablón</h1>
+    <section className="dashboardTeacher">
+      <article className="dashboardContent">
+      <img className="dashboardPerson" src={dashboardPerson} alt="Dashboard Person" />
+      <h1>¡ Bienvenid@ {user ? `, ${user.name}` : ""} ! Este es tu tablón</h1>
       <Link to="/profile">
-        <button className="showProfileButton">Ver mi perfil</button>
+        <button className="showProfileButton">
+        <FaUser className="btnIcon" />
+          Ver mi perfil
+        </button>
       </Link>
       <button className="createClassButton" onClick={() => setShowForm(true)}>
+      <FaPlus className="btnIcon" />
         Crear clase
       </button>
       <button className="logOutButton" onClick={handleLogout}>
+      <FaSignOutAlt className="btnIcon" />
         Cerrar sesión
       </button>
+      </article>
 
       {showForm && (
         <article className="createClassDashboard">
           <h2>¡Crea una nueva clase!</h2>
-          <form onSubmit={handleSubmit}>
+          <form className="createClassDashboardForm" onSubmit={handleSubmit}>
             <label>
               Materia:
               <select
                 name="subjectName"
+                className="selectSubjectDashboard"
                 value={formData.subjectName}
                 onChange={handleChange}
                 required
@@ -173,8 +185,7 @@ const DashboardTeacher = () => {
                 ))}
               </select>
             </label>
-            <label>Materiales:</label>
-
+            <label>Materiales complementario:</label>
             {formData.materials.map((mat, index) => (
               <input
                 key={index}
@@ -184,13 +195,15 @@ const DashboardTeacher = () => {
               />
             ))}
 
-            <button type="button" onClick={addMaterialInput}>
+            <button className="addMaterialButton" type="button" onClick={addMaterialInput}>
+            <FaPlus className="btnIcon" />
               Añadir material
             </button>
 
             <label>Nivel:</label>
             <select
               name="level"
+              className="levelInputDashBoard"
               value={formData.level}
               onChange={(e) =>
                 setFormData({ ...formData, level: e.target.value })
@@ -207,6 +220,7 @@ const DashboardTeacher = () => {
               <input
                 type="datetime-local"
                 name="schedule"
+                className="dateInputDashboard"
                 value={formData.schedule}
                 onChange={(e) =>
                   setFormData({
@@ -220,6 +234,7 @@ const DashboardTeacher = () => {
             <label>Formato:</label>
             <select
               name="format"
+              className="formatSelectDashboard"
               value={formData.format}
               onChange={(e) =>
                 setFormData({ ...formData, format: e.target.value })
@@ -231,11 +246,16 @@ const DashboardTeacher = () => {
               <option value="Presencial">Presencial</option>
             </select>
             <div className="createFormButtons">
-              <button type="saveCreateButton">Guardar</button>
+              <button className="saveCreateButton" type="saveCreateButton">
+              <FaSave className="btnIcon" />
+                Guardar
+              </button>
               <button
+              className="cancelCreateButtom"
                 type="cancelCreateButtom"
                 onClick={() => setShowForm(false)}
               >
+              <FaTimes className="btnIcon" />
                 Cancelar
               </button>
             </div>

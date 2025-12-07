@@ -1,0 +1,126 @@
+.Home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border: 4px solid var(--black);
+  border-radius: 32px;
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.infoHome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+}
+
+.infoHome h1 {
+  margin-bottom: 10px;
+  margin-top: 0px;
+  font-size: 45px;
+}
+
+.infoHome p {
+  margin-top: 0;
+  text-align: justify;
+  line-height: 1.5;
+  font-size: 18px;
+}
+
+.homeButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.homePerson {
+  width: 315px;
+}
+
+.signUpButton,
+.logInButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  width: 320px;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: var(--font-medium);
+}
+
+.signUpButton:hover {
+  background-color: var(--green);
+  color: var(--black);
+}
+
+.logInButton:active {
+  background-color: var(--green);
+  border: 2px solid var(--black);
+  color: var(--black);
+}
+
+.logInButton:hover {
+  background-color: var(--green);
+  border: 2px solid var(--black);
+  color: var(--black);
+}
+
+.logInButton {
+  background-color: var(--black);
+  color: var(--white);
+  border: 2px solid var(--black);
+}
+
+.signUpButton {
+  background-color: var(--white);
+  color: var(--black);
+  border: 2px solid var(--black);
+}
+@media (min-width: 1024px) {
+  .Home {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid var(--black);
+    border-radius: 32px;
+    gap: 60px;
+    padding: 32px;
+    margin: 0 auto;
+  }
+
+  .infoHome {
+    display: flex;
+    flex-direction: fle;
+    align-items: flex-start; /* texto alineado a la izquierda */
+    max-width: 500px; /* ancho más adecuado para escritorio */
+  }
+
+  .infoHome p {
+    font-size: 20px; /* texto un poco más grande */
+  }
+
+  .homeButtons {
+    flex-direction: column; /* botones lado a lado */
+    gap: 20px;
+  }
+
+  .homePerson {
+    width: 450px; /* imagen más grande en escritorio */
+  }
+
+  .signUpButton,
+  .logInButton {
+    width: 180px; /* botones más pequeños y proporcionados */
+    padding: 14px 20px;
+    font-size: 18px;
+  }
+}
