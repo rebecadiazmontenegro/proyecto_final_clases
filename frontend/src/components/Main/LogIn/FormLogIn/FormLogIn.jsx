@@ -7,6 +7,9 @@ import { UserContext } from "../../../../context/UserContext";
 import loginPerson from "../../../../assets/login_person.png";
 import { FaGoogle } from "react-icons/fa";
 
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
 const FormLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +17,7 @@ const FormLogIn = () => {
   const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+  const notyf = new Notyf({ duration: 3000, position: { x: "center", y: "top" } });
 
   const handleGoogleLogin = () => {
     window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL;
@@ -28,7 +32,7 @@ const FormLogIn = () => {
       navigate("/dashboardteacher");
       setUser(response.user);
     } catch (error) {
-      alert(error.message || "Error al iniciar sesión");
+      notyf.error(error.message || "Error al iniciar sesión");
     } finally {
       setLoading(false);
     }

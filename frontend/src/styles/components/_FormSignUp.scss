@@ -18,9 +18,10 @@
     gap: 16px;
     width: 100%;
 
-    h2 {
-      margin-bottom: 8px;
-      margin-top: 8px;
+    .infoSignUp{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     label {
@@ -45,10 +46,11 @@
     }
 
     select {
+        width: 335px;
       cursor: pointer;
     }
 
-    button {
+    .signUpButton {
       margin-top: 20px;
       display: flex;
       justify-content: center;
@@ -59,7 +61,8 @@
       font-size: 18px;
       font-weight: var(--font-medium);
       border: 2px solid var(--black);
-      background-color: var(--white);
+      background-color: var(--black);
+      color: var(--white);
       cursor: pointer;
       transition: all 0.3s ease;
 
@@ -71,33 +74,52 @@
   }
 }
 
-/* -------- DESKTOP -------- */
+
 
 @media (min-width: 1024px) {
   .signUp {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     width: 1320px;
     padding: 32px;
+    gap: 100px;
     margin: 0 auto;
 
-    .formRegister {
-      max-width: 400px;
-      justify-content: center;
-      align-items: center;
+    .signUpPerson {
+      width: 400px;
+    }
 
-      h2 {
+    .formRegister {
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+      row-gap: 24px;
+
+      h1 {
+        grid-column: 1 / -1;
         text-align: left;
+        margin-bottom: 16px;
+      }
+
+      .infoSignUp {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
       }
 
       input,
       select {
-        width: 500px;
+        width: 350px;
         font-size: 18px;
       }
 
-      button {
+      .signUpButton {
+        grid-column: 1 / -1;
+        justify-self: center;
         width: 300px;
-        font-size: 18px;
-        padding: 14px 20px;
+        margin-top: 32px;
       }
     }
   }
