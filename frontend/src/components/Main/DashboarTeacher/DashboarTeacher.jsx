@@ -148,22 +148,26 @@ const DashboardTeacher = () => {
   return (
     <section className="dashboardTeacher">
       <article className="dashboardContent">
-      <img className="dashboardPerson" src={dashboardPerson} alt="Dashboard Person" />
-      <h1>¡ Bienvenid@ {user ? `, ${user.name}` : ""} ! Este es tu tablón</h1>
-      <Link to="/profile">
-        <button className="showProfileButton">
-        <FaUser className="btnIcon" />
-          Ver mi perfil
+        <img
+          className="dashboardPerson"
+          src={dashboardPerson}
+          alt="Dashboard Person"
+        />
+        <h1>¡ Bienvenid@ {user ? `, ${user.name}` : ""} ! Este es tu tablón</h1>
+        <Link to="/profile">
+          <button className="showProfileButton">
+            <FaUser className="btnIcon" />
+            Ver mi perfil
+          </button>
+        </Link>
+        <button className="createClassButton" onClick={() => setShowForm(true)}>
+          <FaPlus className="btnIcon" />
+          Crear clase
         </button>
-      </Link>
-      <button className="createClassButton" onClick={() => setShowForm(true)}>
-      <FaPlus className="btnIcon" />
-        Crear clase
-      </button>
-      <button className="logOutButton" onClick={handleLogout}>
-      <FaSignOutAlt className="btnIcon" />
-        Cerrar sesión
-      </button>
+        <button className="logOutButton" onClick={handleLogout}>
+          <FaSignOutAlt className="btnIcon" />
+          Cerrar sesión
+        </button>
       </article>
 
       {showForm && (
@@ -197,8 +201,12 @@ const DashboardTeacher = () => {
               />
             ))}
 
-            <button className="addMaterialButton" type="button" onClick={addMaterialInput}>
-            <FaPlus className="btnIcon" />
+            <button
+              className="addMaterialButton"
+              type="button"
+              onClick={addMaterialInput}
+            >
+              <FaPlus className="btnIcon" />
               Añadir material
             </button>
 
@@ -249,15 +257,15 @@ const DashboardTeacher = () => {
             </select>
             <div className="createFormButtons">
               <button className="saveCreateButton" type="saveCreateButton">
-              <FaSave className="btnIcon" />
+                <FaSave className="btnIcon" />
                 Guardar
               </button>
               <button
-              className="cancelCreateButtom"
+                className="cancelCreateButtom"
                 type="cancelCreateButtom"
                 onClick={() => setShowForm(false)}
               >
-              <FaTimes className="btnIcon" />
+                <FaTimes className="btnIcon" />
                 Cancelar
               </button>
             </div>

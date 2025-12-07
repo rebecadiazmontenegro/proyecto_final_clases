@@ -1,29 +1,49 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import InforUser from "./InforUser/InforUser"
-import WeekClasses from './WeekClasses/WeekClasses'
+import InforUser from "./InforUser/InforUser";
+import WeekClasses from "./WeekClasses/WeekClasses";
+import { FaChalkboard, FaCalendar, FaArrowLeft } from "react-icons/fa";
 
+import profilePerson from "../../../assets/profile_person.png";
 
 const Profile = () => {
-   const navigate = useNavigate();
-       useEffect(() => {
-       const token = localStorage.getItem("token");
-       if (!token) {
-         navigate("/login", { replace: true });
-       }
-     }, []);
-  return <section>
-    <button className="backButton" onClick={() => navigate(-1)}>Volver</button>
-    <h1>Perfil del usuario</h1>
-    <InforUser />
-    <WeekClasses />
-    <Link to="/classes">
-          <button>Todas las clases</button>
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
+  return (
+    <section className="profile">
+      <button className="backButton" onClick={() => navigate(-1)}>
+        <FaArrowLeft />
+        Volver
+      </button>
+      <h1>Tu perfil</h1>
+      <article className="infoUserCard">
+        <img className="profilePerson" src={profilePerson} alt="Home Person" />
+        <InforUser />
+      </article>
+      <article className="weekClases">
+        <WeekClasses />
+      </article>
+      <div className="profileButtons">
+        <Link to="/classes">
+          <button className="allClassesButton">
+            <FaChalkboard />
+            Todas las clases
+          </button>
         </Link>
-     <Link to="/calendar">
-          <button>Calendario</button>
+        <Link to="/calendar">
+          <button className="calendarButton">
+            <FaCalendar />
+            Calendario
+          </button>
         </Link>
-  </section>;
+      </div>
+    </section>
+  );
 };
 
 export default Profile;

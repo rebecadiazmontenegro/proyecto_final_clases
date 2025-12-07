@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaUserShield } from "react-icons/fa";
 
 const InforUser = () => {
   const navigate = useNavigate();
@@ -8,14 +9,25 @@ const InforUser = () => {
   if (!user) {
     // Si no hay usuario logeado, redirige al login
     navigate("/login");
-    return null; // no renderiza nada
+    return null;
   }
 
   return (
     <section className="userInfo">
-      <p><strong>Nombre:</strong> {user.name}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Rol:</strong> {user.role}</p>
+      <article className="infoUserCard">
+        <p>
+          <FaUser />
+          <strong>Nombre:</strong> {user.name}
+        </p>
+        <p>
+          <FaEnvelope />
+          <strong>Email:</strong> {user.email}
+        </p>
+        <p>
+          <FaUserShield />
+          <strong>Rol:</strong> {user.role}
+        </p>
+      </article>
     </section>
   );
 };
