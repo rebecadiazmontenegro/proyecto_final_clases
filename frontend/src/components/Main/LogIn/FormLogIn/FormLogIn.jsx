@@ -1,14 +1,12 @@
 import React, { useState, useContext } from "react";
-import BeatLoader from "react-spinners/BeatLoader";
 import { useNavigate } from "react-router-dom";
-import { logIn } from "../../../../services/users.service";
-import { UserContext } from "../../../../context/UserContext";
-
-import loginPerson from "../../../../assets/login_person.png";
+import BeatLoader from "react-spinners/BeatLoader";
 import { FaGoogle } from "react-icons/fa";
-
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { logIn } from "../../../../services/users.service";
+import { UserContext } from "../../../../context/UserContext";
+import loginPerson from "../../../../assets/login_person.png";
 
 const FormLogIn = () => {
   const [email, setEmail] = useState("");

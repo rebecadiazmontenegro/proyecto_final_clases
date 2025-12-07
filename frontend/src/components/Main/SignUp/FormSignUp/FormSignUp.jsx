@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../../../services/users.service";
-
 import signupPerson from "../../../../assets/signup_person.png";
-
 
 const FormSignUp = () => {
   const [formData, setFormData] = useState({

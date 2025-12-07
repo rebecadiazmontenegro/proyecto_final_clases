@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
+import { FaArrowLeft } from "react-icons/fa";
 import ClassesCard from "./ClassesCard/ClassesCard";
 import { getAllClasses } from "../../../services/classes.service";
 
-import { FaArrowLeft } from "react-icons/fa";
 
 const subjects = [
   "Historia del Arte",

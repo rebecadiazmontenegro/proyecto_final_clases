@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-import { createClass } from "../../../services/classes.service";
-import { logout } from "../../../services/users.service";
-import { UserContext } from "../../../context/UserContext";
-
-import dashboardPerson from "../../../assets/dashboard_person.png";
-
 import { FaUser, FaPlus, FaSignOutAlt, FaSave, FaTimes } from "react-icons/fa";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { createClass } from "../../../services/classes.service";
+import { logout } from "../../../services/users.service";
+import { UserContext } from "../../../context/UserContext";
+import dashboardPerson from "../../../assets/dashboard_person.png";
+
 
 const subjects = [
   "Historia del Arte",

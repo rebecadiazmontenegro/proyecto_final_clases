@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Notyf } from "notyf";
-import "notyf/notyf.min.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
   FaEdit,
@@ -12,8 +12,9 @@ import {
   FaPlus,
   FaSave,
 } from "react-icons/fa";
-import { useParams, useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import "notyf/notyf.min.css";
 import {
   getClassDetail,
   deleteClass,
@@ -66,7 +67,7 @@ const ClassesDetail = () => {
   });
   const [existingMaterials, setExistingMaterials] = useState([]);
   const [newMaterials, setNewMaterials] = useState([]);
-
+  const MySwal = withReactContent(Swal);
   const notyf = new Notyf({
     duration: 3000,
     position: { x: "center", y: "top" },
@@ -96,14 +97,25 @@ const ClassesDetail = () => {
   }, [id]);
 
   const handleDelete = async () => {
-    if (!window.confirm("¿Seguro que quieres eliminar esta clase?")) return;
-    try {
-      await deleteClass(id);
-      notyf.success("Clase eliminada correctamente");
-      navigate("/classes");
-    } catch (err) {
-      console.error("Error al eliminar", err);
-      notyf.error(err.message || "Error al eliminar clase");
+    const result = await MySwal.fire({
+      title: "¿Estás seguro?",
+      text: "No podras recuperar esta clase",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#aaa",
+      cancelButtonColor: "#d85e99ff",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteClass(id);
+        notyf.success("Clase eliminada correctamente");
+        navigate("/classes");
+      } catch (err) {
+        notyf.error(err.message || "Error al eliminar clase");
+      }
     }
   };
 
@@ -117,14 +129,12 @@ const ClassesDetail = () => {
     setNewMaterials([...newMaterials, null]);
   };
 
-  // Función para borrar un material existente
   const handleRemoveExistingMaterial = (index) => {
     const updated = [...existingMaterials];
     updated.splice(index, 1);
     setExistingMaterials(updated);
   };
 
-  // Función para borrar un material nuevo
   const handleRemoveNewMaterial = (index) => {
     const updated = [...newMaterials];
     updated.splice(index, 1);
@@ -140,7 +150,6 @@ const ClassesDetail = () => {
       form.append("schedule", formData.schedule);
       form.append("format", formData.format);
 
-      // Añadir archivos nuevos
       newMaterials.forEach((file) => {
         if (file) form.append("materials", file);
       });
@@ -169,8 +178,7 @@ const ClassesDetail = () => {
 
   if (loading) {
     return (
-      <div className="beatLoader"
-      >
+      <div className="beatLoader">
         <BeatLoader color="#ed5fa4ff" size={15} margin={2} loading={true} />
       </div>
     );
@@ -190,44 +198,49 @@ const ClassesDetail = () => {
           <h2>{classDetail.subject_name}</h2>
           <aside>
             <h3>Información de la clase</h3>
-          <p>
-            <strong>Horario:</strong> {classDetail.schedule}
-          </p>
-          <p>
-            <strong>Nivel:</strong> {classDetail.level}
-          </p>
-          <p>
-            <strong>Formato:</strong> {classDetail.format}
-          </p>
-        </aside>
-        <aside>
-          <h3>
-            <FaFileAlt /> Materiales
-          </h3>
-          {existingMaterials.length > 0 ? (
-            <ul>
-              {existingMaterials.map((url, idx) => (
-                <li key={idx}>
-                  <a className="linkMaterial" href={url} target="_blank" rel="noopener noreferrer">
-                    Material {idx + 1}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hay materiales disponibles</p>
-          )}
+            <p>
+              <strong>Horario:</strong> {classDetail.schedule}
+            </p>
+            <p>
+              <strong>Nivel:</strong> {classDetail.level}
+            </p>
+            <p>
+              <strong>Formato:</strong> {classDetail.format}
+            </p>
           </aside>
           <aside>
-          <h3>
-            <FaUser /> Profesor
-          </h3>
-          <p>
-            <strong>Nombre:</strong> {classDetail.teacher_name}
-          </p>
-          <p>
-            <strong>Correo:</strong> {classDetail.teacher_email}
-          </p>
+            <h3>
+              <FaFileAlt /> Materiales
+            </h3>
+            {existingMaterials.length > 0 ? (
+              <ul>
+                {existingMaterials.map((url, idx) => (
+                  <li key={idx}>
+                    <a
+                      className="linkMaterial"
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Material {idx + 1}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay materiales disponibles</p>
+            )}
+          </aside>
+          <aside>
+            <h3>
+              <FaUser /> Profesor
+            </h3>
+            <p>
+              <strong>Nombre:</strong> {classDetail.teacher_name}
+            </p>
+            <p>
+              <strong>Correo:</strong> {classDetail.teacher_email}
+            </p>
           </aside>
           <div className="ClassesDetailsButtons">
             <button className="editButton" onClick={() => setIsEditing(true)}>
@@ -298,60 +311,68 @@ const ClassesDetail = () => {
             <option value="Online">Online</option>
             <option value="Presencial">Presencial</option>
           </select>
-            <article>
-          <label className="labelMaterial">Materiales existentes:</label>
-          {existingMaterials.length > 0 ? (
-            <ul>
-              {existingMaterials.map((url, idx) => (
-                <li key={idx}>
-                  <a href={url} target="_blank" rel="noopener noreferrer">
-                    Material {idx + 1}
-                  </a>
+          <article>
+            <label className="labelMaterial">Materiales existentes:</label>
+            {existingMaterials.length > 0 ? (
+              <ul>
+                {existingMaterials.map((url, idx) => (
+                  <li key={idx}>
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      Material {idx + 1}
+                    </a>
+                    <button
+                      className="deleteMaterialButton"
+                      type="button"
+                      onClick={() => handleRemoveExistingMaterial(idx)}
+                    >
+                      <FaTimes />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay materiales existentes</p>
+            )}
+          </article>
+          <article>
+            <label className="labelMaterial">Materiales nuevos:</label>
+            {newMaterials.map((file, idx) => (
+              <aside key={idx}>
+                <p>{file ? file.name : "Archivo no seleccionado"}</p>
+                <div className="newMaterial">
+                  <input
+                    className="newMaterialInput"
+                    type="file"
+                    accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                    onChange={(e) => handleFileChange(idx, e.target.files[0])}
+                  />
                   <button
                     className="deleteMaterialButton"
                     type="button"
-                    onClick={() => handleRemoveExistingMaterial(idx)}
+                    onClick={() => handleRemoveNewMaterial(idx)}
                   >
                     <FaTimes />
                   </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hay materiales existentes</p>
-          )}
-          </article>
-          <article>
-          <label className="labelMaterial">Materiales nuevos:</label>
-          {newMaterials.map((file, idx) => (
-            <aside key={idx}>
-              <p>{file ? file.name : "Archivo no seleccionado"}</p>
-              <div className="newMaterial">
-                <input
-                  className="newMaterialInput"
-                  type="file"
-                  accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
-                  onChange={(e) => handleFileChange(idx, e.target.files[0])}
-                />
-                <button
-                  className="deleteMaterialButton"
-                  type="button"
-                  onClick={() => handleRemoveNewMaterial(idx)}
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            </aside>
-          ))}
-          <button className="addNewMaterialEdit" type="button" onClick={addMaterialInput}>
-            <FaPlus /> Añadir material
-          </button>
+                </div>
+              </aside>
+            ))}
+            <button
+              className="addNewMaterialEdit"
+              type="button"
+              onClick={addMaterialInput}
+            >
+              <FaPlus /> Añadir material
+            </button>
           </article>
           <div className="editButtons">
             <button className="saveEditButton" type="submit">
               <FaSave /> Guardar
             </button>
-            <button className="cancelarEditButton" type="button" onClick={() => setIsEditing(false)}>
+            <button
+              className="cancelarEditButton"
+              type="button"
+              onClick={() => setIsEditing(false)}
+            >
               <FaTimes /> Cancelar
             </button>
           </div>

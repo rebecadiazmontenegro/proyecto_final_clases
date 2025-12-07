@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaChalkboard, FaCalendar, FaArrowLeft } from "react-icons/fa";
 import InforUser from "./InforUser/InforUser";
 import WeekClasses from "./WeekClasses/WeekClasses";
-import { FaChalkboard, FaCalendar, FaArrowLeft } from "react-icons/fa";
-
 import profilePerson from "../../../assets/profile_person.png";
 
 const Profile = () => {
@@ -26,6 +25,7 @@ const Profile = () => {
         <InforUser />
       </article>
       <article className="weekClases">
+        <h2>Tus últimas clases añadidas</h2>
         <WeekClasses />
       </article>
       <div className="profileButtons">
