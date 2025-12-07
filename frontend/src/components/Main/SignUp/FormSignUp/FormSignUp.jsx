@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../../../services/users.service";
 
+import signupPerson from "../../../../assets/signup_person.png";
+
+
 const FormSignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -32,9 +35,10 @@ const FormSignUp = () => {
   };
 
   return (
-    <section>
+    <section className="signUp">
+      <img className="signUpPerson" src={signupPerson} alt="Home Person" />
       <form className="formRegister" onSubmit={handleSubmit}>
-        <h2>Crea tu cuenta</h2>
+        <h1>Crea tu cuenta</h1>
         <label>Nombre</label>
         <input
           type="text"
