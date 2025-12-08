@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi"; // iconos de hamburguesa y X
 import "./Nav.css";
+import logo from "../../../assets/logotipo.png";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,6 @@ const Nav = () => {
   return (
     <header>
       <nav>
-        {/* Botón menú / X */}
         <button
           className="menuButton"
           onClick={() => setIsOpen(!isOpen)}
@@ -19,10 +19,10 @@ const Nav = () => {
           {isOpen ? <FiX size={30} className="X-icon"/> : <FiMenu size={30} />}
         </button>
 
-        {/* Logo */}
-        <div className="logo">MiLogo</div>
+        <div className="logo">
+          <img src={logo} alt="Logo" />
+        </div>
 
-        {/* Menú */}
         <div className={`navLink ${isOpen ? "open" : ""}`}>
           <Link to="/dashboardteacher" onClick={() => setIsOpen(false)}>Home</Link>
           <Link to="/profile" onClick={() => setIsOpen(false)}>Perfil</Link>

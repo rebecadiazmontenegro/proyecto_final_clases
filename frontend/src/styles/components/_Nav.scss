@@ -22,14 +22,15 @@ nav {
   left: 190px;
 }
 
-.logo {
-  color: var(--white);
-  font-size: 25px;
-  font-weight: var(--font-medium);
+.logo img {
+  height: 40px;
+  margin-top: 4px;
+  width: auto;
 }
 
 .navLink {
   display: flex;
+  align-items: flex-end;
   gap: 20px;
 }
 
@@ -65,7 +66,6 @@ nav {
   }
 }
 
-// ---------- Pantallas grandes -------------
 
 @media (min-width: 769px) {
   .menuButton {
@@ -75,6 +75,12 @@ nav {
   nav {
     justify-content: space-between;
     padding: 24px 32px;
+  }
+
+  .logo img {
+    height: 50px;
+    width: auto;
+    margin-top: 4px;
   }
 
   .navLink a {
