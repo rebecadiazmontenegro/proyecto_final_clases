@@ -11,6 +11,7 @@ const queries = {
     FROM users
     WHERE id_user = $1;
   `,
+
   createUser: `
     INSERT INTO users (name, email, password, role)
     VALUES ($1, $2, $3, $4)

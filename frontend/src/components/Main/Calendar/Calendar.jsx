@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-
-import { Notyf } from "notyf";
-import "notyf/notyf.min.css";
 import { useNavigate } from "react-router-dom";
+import { Notyf } from "notyf";
 import { Calendar, Views } from "react-big-calendar";
-
-import { localizer } from "../../../calendar/localizer";
+import "notyf/notyf.min.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
+import { localizer } from "../../../calendar/localizer";
 import { getAllClasses, createClass } from "../../../services/classes.service";
 
 const subjects = [
@@ -152,19 +149,22 @@ export default function MyCalendar() {
 
       const saved = await createClass(form, token);
 
-      setEvents((prev) => [
-        ...prev,
-        {
-          id: saved.class.id_class,
-          title: saved.class.subjectName,
-          start: new Date(saved.class.schedule),
-          end: new Date(saved.class.schedule),
-          materials: saved.class.materials,
-          level: saved.class.level,
-          schedule: saved.class.schedule,
-          format: saved.class.format,
-        },
-      ]);
+     setEvents((prev) => {
+  const newEvents = [
+    ...prev,
+    {
+      id: saved.class.id_class,
+      title: saved.class.subjectName,
+      start: new Date(saved.class.schedule),
+      end: new Date(saved.class.schedule),
+      materials: saved.class.materials,
+      level: saved.class.level,
+      schedule: saved.class.schedule,
+      format: saved.class.format,
+    },
+  ];
+  return [...newEvents]; 
+});
 
       notyf.success("Clase creada correctamente");
 
@@ -183,8 +183,8 @@ export default function MyCalendar() {
   }
 
   return (
-    <section style={{ padding: 16 }}>
-      <article style={{ height: "700px" }}>
+    <section className="calendar">
+      <article className="myCalendarContainer" style={{ height: "700px" }}>
         <Calendar
           localizer={localizer}
           events={events}
@@ -208,88 +208,98 @@ export default function MyCalendar() {
       </article>
 
       {showForm && (
-        <article className="createClassCalendar">
-          <h2>Crear Clase</h2>
+        <div className="PopUp" onClick={() => setShowForm(false)}>
+          <div
+            className="formPopUp"
+            onClick={(e) => e.stopPropagation()} // Sino se puede cerrar al tocar el PopUp
+          >
+            <h2>Crear Clase</h2>
 
-          <form className="createFormCalendar" onSubmit={handleSubmit}>
-            <label>
-              Materia:
+            <form className="createFormCalendar" onSubmit={handleSubmit}>
+              <label>
+                Materia:
+                <select
+                  className="calendarInput"
+                  name="subjectName"
+                  value={formData.subjectName}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Selecciona una materia</option>
+                  {subjects.map((subj, idx) => (
+                    <option key={idx} value={subj}>
+                      {subj}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>Materiales:</label>
+
+              {formData.materials.map((mat, index) => (
+                <input
+                  className="calendarInput"
+                  key={index}
+                  type="file"
+                  accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
+                  onChange={(e) => handleFileChange(index, e.target.files[0])}
+                />
+              ))}
+
+              <button className="addMaterialCalendar" type="button" onClick={addMaterialInput}>
+                Añadir material
+              </button>
+
+              <label>Nivel:</label>
               <select
-                name="subjectName"
-                value={formData.subjectName}
+                className="calendarInput"
+                name="level"
+                value={formData.level}
                 onChange={handleChange}
                 required
               >
-                <option value="">Selecciona una materia</option>
-                {subjects.map((subj, idx) => (
-                  <option key={idx} value={subj}>
-                    {subj}
-                  </option>
-                ))}
+                <option value="">Selecciona un nivel</option>
+                <option value="Iniciación">Iniciación</option>
+                <option value="Medio">Medio</option>
+                <option value="Avanzado">Avanzado</option>
               </select>
-            </label>
 
-            <label>Materiales:</label>
+              <label>Formato:</label>
+              <select
+              className="calendarInput"
+                name="format"
+                value={formData.format}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecciona un formato</option>
+                <option value="Online">Online</option>
+                <option value="Presencial">Presencial</option>
+              </select>
 
-            {formData.materials.map((mat, index) => (
-              <input
-                key={index}
-                type="file"
-                accept=".jpeg,.jpg,.png,.mp4,.mov,.mp3,.wav,.mkv,.avi,.pdf"
-                onChange={(e) => handleFileChange(index, e.target.files[0])}
-              />
-            ))}
+              <label>
+                Fecha y Hora:
+                <input
+                className="calendarInput"
+                  type="datetime-local"
+                  value={
+                    selectedSlot
+                      ? new Date(selectedSlot.start).toISOString().slice(0, 16)
+                      : ""
+                  }
+                  disabled
+                />
+              </label>
 
-            <button type="button" onClick={addMaterialInput}>
-              Añadir material
-            </button>
-
-            <label>Nivel:</label>
-            <select
-              name="level"
-              value={formData.level}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Selecciona un nivel</option>
-              <option value="Iniciación">Iniciación</option>
-              <option value="Medio">Medio</option>
-              <option value="Avanzado">Avanzado</option>
-            </select>
-
-            <label>Formato:</label>
-            <select
-              name="format"
-              value={formData.format}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Selecciona un formato</option>
-              <option value="Online">Online</option>
-              <option value="Presencial">Presencial</option>
-            </select>
-
-            <label>
-              Fecha y Hora:
-              <input
-                type="datetime-local"
-                value={
-                  selectedSlot
-                    ? new Date(selectedSlot.start).toISOString().slice(0, 16)
-                    : ""
-                }
-                readOnly
-              />
-            </label>
-
-            <div className="createClassCalendarButton">
-              <button type="submit">Guardar</button>
-              <button type="button" onClick={() => setShowForm(false)}>
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </article>
+              <div className="createClassCalendarButton">
+                <button className="saveCreateCalendar" type="submit">Guardar</button>
+                <button className="cancelCreateCalendar" type="button" onClick={() => setShowForm(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </section>
   );

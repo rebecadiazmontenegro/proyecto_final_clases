@@ -1,6 +1,5 @@
 import React, { Profiler } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-
 import Home from "./Home/Home";
 import SignUp from "./SignUp/SignUp";
 import LogIn from "./LogIn/LogIn";
@@ -9,7 +8,6 @@ import Profile from "./Profile/Profile";
 import ClassesList from "./ClassesList/ClassesList";
 import Calendar from "./Calendar/Calendar";
 import ClassDetail from "./ClassesDetail/ClassesDetail";
-
 
 const Main = () => {
   return (

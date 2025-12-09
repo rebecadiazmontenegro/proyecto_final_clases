@@ -4,8 +4,25 @@ const jwt = require("jsonwebtoken");
 
 const {validationResult} = require("express-validator");
 
-// GET http://localhost:3000/login
+/**
+ * Login de un usuario.
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.body - Cuerpo de la solicitud.
+ * @param {string} req.body.email - Email del usuario.
+ * @param {string} req.body.password - Contraseña del usuario.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const loginUser = async (req, res) => {
+
+    const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -44,8 +61,19 @@ const loginUser = async (req, res) => {
   }
 };
 
+/**
+ * Crear un nuevo usuario.
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.body - Cuerpo de la solicitud.
+ * @param {string} req.body.name - Nombre del usuario.
+ * @param {string} req.body.email - Email del usuario.
+ * @param {string} req.body.password - Contraseña del usuario.
+ * @param {string} [req.body.role] - Rol del usuario.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const createUser = async (req, res) => {
-
+  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -56,13 +84,6 @@ const createUser = async (req, res) => {
 
   try {
     const { name, email, password, role } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        message: "Nombre, email y contraseña son obligatorios",
-      });
-    }
-
     const encryptedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {

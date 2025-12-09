@@ -16,16 +16,23 @@ const validateCreateUser = [
     .withMessage("Debe ser un email válido")
     .normalizeEmail(),
 
-  body("password")
-    .exists()
-    .withMessage("La contraseña es obligatoria"),
+body("password")
+  .exists()
+  .withMessage("La contraseña es obligatoria")
+  .isLength({ min: 6 })
+  .withMessage("La contraseña debe tener al menos 6 caracteres")
+  .matches(/(?=.*[a-z])/)
+  .withMessage("La contraseña debe tener al menos una minúscula")
+  .matches(/(?=.*[A-Z])/)
+  .withMessage("La contraseña debe tener al menos una mayúscula")
+  .matches(/(?=.*[\W_])/)
+  .withMessage("La contraseña debe tener al menos un carácter especial"),
 
   body("role")
     .optional()
     .isString()
     .withMessage("El rol debe ser un texto"),
 ];
-
 const validateLoginUser = [
   body("email")
     .exists()
@@ -35,17 +42,18 @@ const validateLoginUser = [
     .normalizeEmail(),
 
   body("password")
-  .exists()
-  .withMessage("La contraseña es obligatoria")
-  .isLength({ min: 6 })
-  .withMessage("La contraseña debe tener al menos 6 caracteres")
-  .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])/)
-  .withMessage(
-    "La contraseña debe tener al menos una mayúscula, una minúscula y un carácter especial"
-  )
+    .exists()
+    .withMessage("La contraseña es obligatoria")
+];
+
+const validateDeleteUser = [
+  param("id")
+    .isInt()
+    .withMessage("El id de usuario debe ser un número entero")
 ];
 
 module.exports = {
   validateCreateUser,
-  validateLoginUser
+  validateLoginUser,
+  validateDeleteUser,
 };

@@ -4,7 +4,7 @@ const WeekClassesCard = ({ subject, schedule }) => {
   return (
     <article className="latesClassCard">
       <h3>{subject}</h3>
-      <p>{schedule}</p>
+      <p><strong>Horario: </strong>{schedule}</p>
     </article>
   );
 };

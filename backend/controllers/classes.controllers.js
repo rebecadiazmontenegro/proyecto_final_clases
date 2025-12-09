@@ -1,7 +1,16 @@
 const pool = require("../config/db_pgsql");
 const classesModel = require("../models/classes.models");
 
-// GET http://localhost:3000/classes/profile
+/**
+ * Obtener las últimas clases del usuario.
+ * GET /classes/profile
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.user - Usuario autenticado.
+ * @param {number} req.user.id - ID del usuario.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const getLatestClasses = async (req, res) => {
   const id_user = req.user.id;
 
@@ -14,7 +23,16 @@ const getLatestClasses = async (req, res) => {
   }
 };
 
-// GET http://localhost:3000/classes/profile/all
+/**
+ * Obtener todas las clases del usuario.
+ * GET /classes/profile/all
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.user - Usuario autenticado.
+ * @param {number} req.user.id - ID del usuario.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const getAllClasses = async (req, res) => {
   const id_user = req.user.id;
 
@@ -27,6 +45,15 @@ const getAllClasses = async (req, res) => {
   }
 };
 
+/**
+ * Obtener el detalle de una clase específica.
+ * GET /classes/profile/:id
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {string} req.params.id - ID de la clase.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const getClassDetail = async (req, res) => {
   try {
     const id_class = req.params.id;
@@ -46,6 +73,17 @@ const getClassDetail = async (req, res) => {
   }
 };
 
+/**
+ * Eliminar una clase del usuario.
+ * DELETE /classes/:id
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {string} req.params.id - ID de la clase a eliminar.
+ * @param {Object} req.user - Usuario autenticado.
+ * @param {number} req.user.id - ID del usuario.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const deleteClass = async (req, res) => {
   try {
     const id_class = req.params.id;
@@ -66,12 +104,41 @@ const deleteClass = async (req, res) => {
   }
 };
 
+/**
+ * Editar una clase existente.
+ * PUT /classes/:id
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {string} req.params.id - ID de la clase a editar.
+ * @param {Object} req.user - Usuario autenticado.
+ * @param {number} req.user.id - ID del usuario.
+ * @param {Object} req.body - Datos de la clase.
+ * @param {string} req.body.subject_name - Nombre de la asignatura.
+ * @param {string} req.body.level - Nivel de la clase.
+ * @param {string} req.body.schedule - Horario de la clase.
+ * @param {string} req.body.format - Formato de la clase.
+ * @param {string} [req.body.oldMaterials] - Materiales existentes en formato JSON.
+ * @param {Object} req.files - Archivos subidos (materiales nuevos).
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const editClass = async (req, res) => {
   try {
     const { id } = req.params;
     const id_user = req.user.id;
 
-    const { subject_name, materials, level, schedule, format } = req.body;
+    const { subject_name, level, schedule, format, oldMaterials } = req.body;
+
+    const newMaterials = req.files
+      ? req.files.map(
+          (file) =>
+            `${req.protocol}://${req.get("host")}/uploads/${file.filename}`
+        )
+      : [];
+
+    const materials = oldMaterials
+      ? [...JSON.parse(oldMaterials), ...newMaterials]
+      : newMaterials;
 
     const updated = await classesModel.editClassModel({
       subject_name,
@@ -99,6 +166,23 @@ const editClass = async (req, res) => {
   }
 };
 
+
+/**
+ * Crear una nueva clase.
+ * POST /classes
+ * 
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.user - Usuario autenticado.
+ * @param {number} req.user.id - ID del usuario.
+ * @param {Object} req.body - Datos de la clase.
+ * @param {string} req.body.subjectName - Nombre de la asignatura.
+ * @param {string} req.body.level - Nivel de la clase.
+ * @param {string} req.body.schedule - Horario de la clase.
+ * @param {string} req.body.format - Formato de la clase.
+ * @param {Object} req.files - Archivos subidos (materiales).
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>}
+ */
 const createClass = async (req, res) => {
   try {
     const id_user = req.user.id;

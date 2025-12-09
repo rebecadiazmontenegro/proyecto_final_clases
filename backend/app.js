@@ -4,16 +4,47 @@ const session = require("express-session");
 const passport = require("./config/googleAuth");
 const path = require("path");
 const { upload, errorFileHandler } = require("./middlewares/fileMiddleware");
-require("dotenv").config();
+const errorHandler = require("./middlewares/error404");
+const morgan = require("./middlewares/morgan");
+const swaggerSpec = require("./middlewares/swagger");
+const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(morgan(":method :url :status :param[id] - :response-time ms :body"));
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
+app.use('/api-jsdoc', express.static(path.join(__dirname, '/jsondocs')));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Descargar materiales en classes/details
+// Inicio de sesión con Google
+app.use(
+  session({
+    secret: "SECRET_GOOGLE",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Middleware Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Rutas específicas
+
 app.post("/upload", upload.single("file"), errorFileHandler, (req, res) => {
   const { title, description, year } = req.body;
 
@@ -56,36 +87,13 @@ app.get("/records", (req, res) => {
   });
 });
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-  })
-);
-
-// Middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(
-  session({
-    secret: "SECRET_GOOGLE",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Rutas API
 const usersRoutes = require("./routes/users.routes");
 const classesRoutes = require("./routes/classes.routes");
 
 app.use("/user", usersRoutes);
 app.use("/classes", classesRoutes);
 
-
-if (process.env.NODE_ENV==="production") {
+if (process.env.NODE_ENV === "production") {
   // Servir archivos estáticos del frontend con React
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
   // Manejar cualquier ruta que no sea de la API y servir el index.html de React
@@ -93,6 +101,9 @@ if (process.env.NODE_ENV==="production") {
     res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
   });
 }
+
+// Middleware de manejo de errores
+app.use(errorHandler); // Usar el middleware al final
 
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
