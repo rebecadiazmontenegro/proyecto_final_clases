@@ -23,11 +23,8 @@ passport.use(
                 name: profile.displayName,
                 email: email,
                 role: 'Profesor',
-                password: '123ABCgoogle$' // No se usará pero requiere campo
+                password: '123ABCgoogle$' 
             });
-          
-          
-        //   (email, "GOOGLE_USER", "Profesor");
           
         }
 

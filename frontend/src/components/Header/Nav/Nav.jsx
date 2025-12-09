@@ -1,8 +1,6 @@
-// Nav.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi"; // iconos de hamburguesa y X
-import "./Nav.css";
+import { FiMenu, FiX } from "react-icons/fi";
 import logo from "../../../assets/logotipo.png";
 
 const Nav = () => {
