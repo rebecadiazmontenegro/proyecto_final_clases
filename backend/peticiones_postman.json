@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "fa3116a2-1abe-4f64-9e5f-42cd609fe9bc",
+		"name": "Trabajo_Final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50070914",
+		"_collection_link": "https://rebecadiazmontenegro-929970.postman.co/workspace/Rebeca-D%C3%ADaz-Montenegro-S%C3%A1nchez'~93929908-89a3-487c-8c80-83d3bae52817/collection/50070914-fa3116a2-1abe-4f64-9e5f-42cd609fe9bc?action=share&source=collection_link&creator=50070914"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Paula\",\n  \"email\": \"paula@email.com\",\n  \"password\": \"123abcABC_\",\n  \"role\": \"Profesor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/user/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LogIn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"angeles@gmail.com\",\n  \"password\": \"123abcABC_\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LogOut",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/user/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile/LatestClasses",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJwYXVsYUBlbWFpbC5jb20iLCJyb2xlIjoiUHJvZmVzb3IiLCJpYXQiOjE3NjUyODE0NTUsImV4cCI6MTc2NTI4ODY1NX0.O11vwH1W6WLmOQ54LstzvqRMLADd4XLmLmQTip8c0Ak",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/classes/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"classes",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClassesList/AllClasses",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJwYXVsYUBlbWFpbC5jb20iLCJyb2xlIjoiUHJvZmVzb3IiLCJpYXQiOjE3NjUyODE0NTUsImV4cCI6MTc2NTI4ODY1NX0.O11vwH1W6WLmOQ54LstzvqRMLADd4XLmLmQTip8c0Ak",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/classes/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"classes",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteClass",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJwYXVsYUBlbWFpbC5jb20iLCJyb2xlIjoiUHJvZmVzb3IiLCJpYXQiOjE3NjUyODE0NTUsImV4cCI6MTc2NTI4ODY1NX0.O11vwH1W6WLmOQ54LstzvqRMLADd4XLmLmQTip8c0Ak",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/classes/detail/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"classes",
+						"detail",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClassesById",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/classes/detail/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"classes",
+						"detail",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
