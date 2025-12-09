@@ -62,8 +62,7 @@ const ClassesList = () => {
 
   if (loading) {
     return (
-      <div className="beatLoader"
-      >
+       <div className="beatLoader" role="status">
         <BeatLoader color="#ed5fa4ff" size={15} margin={2} loading={true} />
       </div>
     );
