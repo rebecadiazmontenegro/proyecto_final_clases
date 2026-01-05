@@ -26,6 +26,37 @@ CREATE TABLE classes (
     FOREIGN KEY (id_subject) REFERENCES subjects(id_subject)
 );
 
+INSERT INTO subjects (name) VALUES
+('Historia del Arte'),
+('Matemáticas'),
+('Lengua Castellana y Literatura'),
+('Inglés'),
+('Ciencias Sociales, Geografía e Historia'),
+('Biología y Geología'),
+('Física y Química'),
+('Educación Física'),
+('Tecnología'),
+('Educación Plástica y Visual'),
+('Música'),
+('Filosofía'),
+('Segunda Lengua Extranjera'),
+('Matemáticas CCSS'),
+('Matemáticas CCNN'),
+('Física'),
+('Química'),
+('Biología'),
+('Geología'),
+('Tecnología Industrial'),
+('Dibujo Técnico'),
+('Historia del Mundo Contemporáneo'),
+('Economía'),
+('Geografía'),
+('Literatura Universal'),
+('Diseño'),
+('Cultura Audiovisual'),
+('Dibujo Artístico');
+
+
 -- QUERIES CLASES
 -- [ GET ] http://localhost:3000/classes/detail
 -- Retorna toda la información de una clase, incluyendo materia y nombre del profesor
