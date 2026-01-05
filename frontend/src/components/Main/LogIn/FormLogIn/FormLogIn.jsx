@@ -21,20 +21,28 @@ const FormLogIn = () => {
     window.location.href = import.meta.env.VITE_GOOGLE_LOGIN_URL;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await logIn(email, password);
+  try {
+    const response = await logIn(email, password);
+    setUser(response.user);
+
+    if (response.user.role === "profesor") {
       navigate("/dashboardteacher");
-      setUser(response.user);
-    } catch (error) {
-      notyf.error(error.message || "Error al iniciar sesión");
-    } finally {
-      setLoading(false);
+    } else if (response.user.role === "alumno") {
+      navigate("/dashboardstudent");
+    } else {
+      navigate("/");
     }
-  };
+
+  } catch (error) {
+    notyf.error(error.message || "Error al iniciar sesión");
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) {
     return (

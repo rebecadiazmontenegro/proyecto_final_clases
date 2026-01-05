@@ -8,6 +8,9 @@ import Profile from "./Profile/Profile";
 import ClassesList from "./ClassesList/ClassesList";
 import Calendar from "./Calendar/Calendar";
 import ClassDetail from "./ClassesDetail/ClassesDetail";
+import DashboardStudent from './DashboardStudent/DashboardStudent'
+import AllClassesList from './AllClassesList/AllClassesList'
+import FavorteClassesList from './FavoriteClassesList/FavoriteClassesList'
 
 const Main = () => {
   return (
@@ -22,6 +25,9 @@ const Main = () => {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/class/detail/:id" element={<ClassDetail />} />
         <Route path="/calendar" element={<Calendar />} />
+        <Route path="/dashboardstudent" element={<DashboardStudent />} />
+        <Route path="/all/classes" element={<AllClassesList />} />
+        <Route path="/favorite/classes" element={<FavorteClassesList />} />
       </Routes>
     </main>
   );
