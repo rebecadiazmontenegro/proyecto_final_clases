@@ -7,6 +7,15 @@ CREATE TABLE users (
     role VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE favorites (
+    id_favorite SERIAL PRIMARY KEY,
+    id_user INT NOT NULL,
+    id_class INT NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_class) REFERENCES classes(id_class),
+    CONSTRAINT unique_user_class UNIQUE (id_user, id_class)
+);
+
 -- Tabla subjects
 CREATE TABLE subjects (
     id_subject SERIAL PRIMARY KEY,
