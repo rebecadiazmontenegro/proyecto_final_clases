@@ -114,6 +114,65 @@ const createClass = async (
   return result.rows[0];
 };
 
+// GET Para ver TODAS las clases (para estudiantes)
+const getAllClassesListModel = async () => {
+  let client, result;
+
+  try {
+    client = await pool.connect();
+    const data = await client.query(queries.allClassesList);
+    result = data.rows;
+  } catch (err) {
+    console.error("Error al obtener todas las clases:", err);
+    throw err;
+  } finally {
+    if (client) client.release();
+  }
+
+  return result;
+};
+
+
+const createFavoriteModel = async (id_user, id_class) => {
+  try {
+    const { rows } = await pool.query(queries.createFavorite, [id_user, id_class]);
+    return rows[0]; // Devuelve el favorito creado, o undefined si ya existía
+  } catch (err) {
+    console.error("Error al crear favorito:", err);
+    throw err;
+  }
+};
+
+
+const deleteFavoriteModel = async (id_user, id_class) => {
+  try {
+    const { rows } = await pool.query(queries.deleteFavorite, [id_user, id_class]);
+    return rows[0];
+  } catch (err) {
+    console.error("Error al eliminar favorito:", err);
+    throw err;
+  }
+};
+
+
+const getUserFavoritesModel = async (id_user) => {
+  let client, result;
+
+  try {
+    client = await pool.connect();
+    const data = await client.query(queries.getAllUserFavorites, [id_user]);
+    result = data.rows;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  } finally {
+    client.release();
+  }
+
+  return result;
+};
+
+
 const classes = {
   getLatestClassesModel,
   getAllClassesModel,
@@ -121,6 +180,10 @@ const classes = {
   deleteClassModel,
   editClassModel,
   createClass,
+  getAllClassesListModel,
+  createFavoriteModel,
+  deleteFavoriteModel,
+  getUserFavoritesModel
 };
 
 module.exports = classes;

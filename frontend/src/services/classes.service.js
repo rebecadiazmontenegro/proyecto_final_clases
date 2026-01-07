@@ -115,3 +115,98 @@ export const createClass = async (formData, token) => {
 
   return data;
 };
+
+// Llamada para obtener todas las clases disponibles
+export const allClassesList = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return [];
+
+    const res = await fetch(`${API_URL}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("No se pudieron cargar las clases");
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error al cargar todas las clases:", error);
+    return [];
+  }
+};
+
+
+export const getUserFavorites = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return [];
+
+    const res = await fetch(`${API_URL}/favorites`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("No se pudieron cargar las clases");
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error al cargar las clases:", error);
+    return [];
+  }
+};
+
+// Añadir una clase a favoritos
+export const addFavorite = async (id_class) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No autorizado");
+
+    const res = await fetch(`${API_URL}/favorites/${id_class}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error al añadir favorito");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// Quitar una clase de favoritos
+export const removeFavorite = async (id_class) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No autorizado");
+
+    const res = await fetch(`${API_URL}/favorites/${id_class}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Error al eliminar favorito");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+

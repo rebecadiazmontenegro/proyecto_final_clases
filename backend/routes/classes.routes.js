@@ -185,6 +185,33 @@ router.put("/detail/:id", authMiddleware, upload.array("materials", 10), classes
  */
 router.post("/create", authMiddleware, upload.array("materials", 10), classesController.createClass);
 
+/**
+ * @swagger
+ * /classes:
+ *   get:
+ *     summary: Obtener todas las clases disponibles
+ *     tags:
+ *       - Classes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de todas las clases
+ *       401:
+ *         description: No autorizado
+ *       500:
+ *         description: Error del servidor
+ */
+
+router.get("/", authMiddleware, classesController.getAllClassesList);
+
+router.get("/favorites", authMiddleware, classesController.getUserFavorites);
+
+router.post("/favorites/:id_class", authMiddleware, classesController.addFavorite);
+
+router.delete("/favorites/:id_class", authMiddleware, classesController.removeFavorite);
+
+
 
 module.exports = router;
 

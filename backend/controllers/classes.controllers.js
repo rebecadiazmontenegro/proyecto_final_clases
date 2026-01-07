@@ -4,7 +4,7 @@ const classesModel = require("../models/classes.models");
 /**
  * Obtener las últimas clases del usuario.
  * GET /classes/profile
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {Object} req.user - Usuario autenticado.
  * @param {number} req.user.id - ID del usuario.
@@ -26,7 +26,7 @@ const getLatestClasses = async (req, res) => {
 /**
  * Obtener todas las clases del usuario.
  * GET /classes/profile/all
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {Object} req.user - Usuario autenticado.
  * @param {number} req.user.id - ID del usuario.
@@ -48,7 +48,7 @@ const getAllClasses = async (req, res) => {
 /**
  * Obtener el detalle de una clase específica.
  * GET /classes/profile/:id
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {string} req.params.id - ID de la clase.
  * @param {Object} res - Objeto de respuesta de Express.
@@ -76,7 +76,7 @@ const getClassDetail = async (req, res) => {
 /**
  * Eliminar una clase del usuario.
  * DELETE /classes/:id
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {string} req.params.id - ID de la clase a eliminar.
  * @param {Object} req.user - Usuario autenticado.
@@ -107,7 +107,7 @@ const deleteClass = async (req, res) => {
 /**
  * Editar una clase existente.
  * PUT /classes/:id
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {string} req.params.id - ID de la clase a editar.
  * @param {Object} req.user - Usuario autenticado.
@@ -166,11 +166,10 @@ const editClass = async (req, res) => {
   }
 };
 
-
 /**
  * Crear una nueva clase.
  * POST /classes
- * 
+ *
  * @param {Object} req - Objeto de solicitud de Express.
  * @param {Object} req.user - Usuario autenticado.
  * @param {number} req.user.id - ID del usuario.
@@ -211,6 +210,82 @@ const createClass = async (req, res) => {
   }
 };
 
+/**
+ * Obtener todas las clases disponibles (para estudiantes)
+ * GET /classes
+ *
+ * @param {Object} req - Objeto de solicitud de Express
+ * @param {Object} res - Objeto de respuesta de Express
+ * @returns {Promise<void>}
+ */
+const getAllClassesList = async (req, res) => {
+  try {
+    const classes = await classesModel.getAllClassesListModel();
+    res.status(200).json(classes);
+  } catch (error) {
+    console.error("Error al obtener todas las clases:", error);
+    res.status(500).json({ message: "Error al obtener todas las clases" });
+  }
+};
+
+
+
+const addFavorite = async (req, res) => {
+  try {
+    const id_user = req.user.id;
+    const id_class = req.params.id_class;
+
+    const favorite = await classesModel.createFavoriteModel(id_user, id_class);
+
+    if (!favorite) {
+      return res.status(200).json({ message: "Clase ya estaba en favoritos" });
+    }
+
+    res.status(201).json({
+      message: "Clase añadida a favoritos",
+      favorite,
+    });
+  } catch (error) {
+    console.error("Error al agregar favorito:", error);
+    res.status(500).json({ message: "Error al agregar favorito" });
+  }
+};
+
+
+const removeFavorite = async (req, res) => {
+  try {
+    const id_user = req.user.id;
+    const id_class = req.params.id_class;
+
+    const deleted = await classesModel.deleteFavoriteModel(id_user, id_class);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Favorito no encontrado" });
+    }
+
+    res.status(200).json({
+      message: "Favorito eliminado correctamente",
+      deleted,
+    });
+  } catch (error) {
+    console.error("Error al eliminar favorito:", error);
+    res.status(500).json({ message: "Error al eliminar favorito" });
+  }
+};
+
+
+const getUserFavorites = async (req, res) => {
+  try {
+    const id_user = req.user.id;
+    const favorites = await classesModel.getUserFavoritesModel(id_user);
+
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error("Error al obtener favoritos:", error);
+    res.status(500).json({ message: "Error al obtener favoritos" });
+  }
+};
+
 module.exports = {
   getLatestClasses,
   getAllClasses,
@@ -218,4 +293,8 @@ module.exports = {
   deleteClass,
   editClass,
   createClass,
+  getAllClassesList,
+  addFavorite,
+  removeFavorite,
+  getUserFavorites,
 };

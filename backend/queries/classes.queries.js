@@ -72,6 +72,60 @@ const queries = {
     AND id_user = $2
     RETURNING *;
     `,
+  allClassesList: `
+SELECT 
+    c.id_class,
+    c.materials,
+    c.level,
+    c.schedule,
+    c.format,
+    u.name AS teacher_name,
+    s.name AS subject_name
+FROM 
+    classes c
+JOIN 
+    users u ON c.id_user = u.id_user
+JOIN 
+    subjects s ON c.id_subject = s.id_subject
+ORDER BY 
+    c.id_class DESC;
+
+  `,
+  createFavorite: `
+    INSERT INTO favorites (id_user, id_class)
+    VALUES ($1, $2)
+    ON CONFLICT (id_user, id_class) DO NOTHING
+    RETURNING *;
+  `,
+
+  deleteFavorite: `
+    DELETE FROM favorites
+    WHERE id_user = $1
+      AND id_class = $2
+    RETURNING *;
+  `,
+
+  getAllUserFavorites: `
+    SELECT f.id_favorite,
+          c.id_class,
+          c.level,
+          c.schedule,
+          c.format,
+          u.name AS teacher_name,
+          s.name AS subject_name
+    FROM 
+      favorites f
+    JOIN 
+      classes c ON f.id_class = c.id_class
+    JOIN
+      users u ON c.id_user = u.id_user
+    JOIN
+      subjects s ON c.id_subject = s.id_subject
+    WHERE
+      f.id_user = $1
+    ORDER BY
+      c.id_class DESC;
+  `,
 };
 
 module.exports = queries;
